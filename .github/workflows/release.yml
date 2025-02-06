@@ -7,6 +7,10 @@ on:
         description: 'Release name'     
         required: true
         default: ''
+      description:
+        description: 'Release description'     
+        required: false
+        default: ''
 jobs:
   pack:
     runs-on: ubuntu-latest
@@ -15,10 +19,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload To Github Release
-        uses: xresloader/upload-to-github-release@v1.6.0
+        uses: softprops/action-gh-release@v2
         with:
-          file: "gpu_*/*.*"
-          draft: false
-          prerelease: false
-          branches: "main"
-          default_release_name: github.event.inputs.name
+          files: "gpu_*/*.*"
+          name: ${{github.event.inputs.name}}
+          body: ${{github.event.inputs.description}}
+          make_latest: true
