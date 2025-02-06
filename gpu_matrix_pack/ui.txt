@@ -1,0 +1,19 @@
+[text id="m00" text="..." size=24 x=-375 y=70 font=mono]
+[text id="m10" text="..." size=24 x=-375 y=90 font=mono]
+[text id="m20" text="..." size=24 x=-375 y=110 font=mono]
+[text id="m30" text="..." size=24 x=-375 y=130 font=mono]
+
+[text id="m01" text="..." size=24 x=-125 y=70 font=mono]
+[text id="m11" text="..." size=24 x=-125 y=90 font=mono]
+[text id="m21" text="..." size=24 x=-125 y=110 font=mono]
+[text id="m31" text="..." size=24 x=-125 y=130 font=mono]
+
+[text id="m02" text="..." size=24 x=125 y=70 font=mono]
+[text id="m12" text="..." size=24 x=125 y=90 font=mono]
+[text id="m22" text="..." size=24 x=125 y=110 font=mono]
+[text id="m32" text="..." size=24 x=125 y=130 font=mono]
+
+[text id="m03" text="..." size=24 x=375 y=70 font=mono]
+[text id="m13" text="..." size=24 x=375 y=90 font=mono]
+[text id="m23" text="..." size=24 x=375 y=110 font=mono]
+[text id="m33" text="..." size=24 x=375 y=130 font=mono]

@@ -1,0 +1,59 @@
+kind = sequential
+immutable_program = true
+immutable_spec = true
+title = "Rasterizer"
+size = [-256, -256, 255, 255]
+background = 5
+components_available = [com_pixel_screen: -1, com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+copy_solution_to_architecture = "Hoodoo"
+copy_solution_to_level = ["gpu_rasterizer_2"]
+dialogue = [
+  (alien_centered, "Now we will combine all the components we have made and create the [color=#ff9800]Rasterizer[/color].
+The rasterizer will receive 2D triangles and draw them on the screen."),
+  (info, "First of all, we need to create the infrastructure to test the rasterizer.
+1. Add a FastRAM and a Pixel Screen.
+Connect the Screen to the RAM.
+Set the RAM's size to 32768.
+2. Add a ROM and turn it into an assembler.
+We will read triangle data from it, so change the width to 168 bits to read a single triangle at once (XY point (32bits) and RGB color (24bits), three times)."),
+  (info, "When you have all of that in place, you can begin assembling the rasterizer:
+1. Calculate the area of the triangle using SArea.
+2. Calculate the triangle's bounds using the MinMax component you made earlier.
+3. Pass the bounds into the 2D Counter so the rasterizer can iterate over the pixels of the triangle.
+4. Calculate the barycentric coordinates, and using them, mix the colors of the triangle to get the pixel's color.
+
+Hint: Some of the components take integers, while others take fixed-point numbers. You will have to transform the data accordingly."),
+  (info, "To pass this level you will need to actually draw a triangle on the screen:
+1. If the pixel is inside the triangle, you need to write to the RAM connected to the screen.
+2. The index of the pixel can be calculated by formula:
+[center][code]Y * 160 + X[/code][/center]
+3. The screen expects colors in the format [color=#ff0000]RRR[/color][color=#00ff00]GGG[/color][color=#0000ff]BB[/color], so you will need to cut off the least significant bits from the color you have mixed."),
+  (alien_centered, "After you have everything set up, run the test and see the magic happen.")
+]
+default_isa_spec = `
+[settings]
+name = "Hoodoo"
+
+[fields]
+
+[instructions]
+
+point %a(immediate), %b(immediate)
+%a[7:0] %a[15:8] %b[7:0] %b[15:8]
+A 2D point.
+
+color %r(immediate), %g(immediate), %b(immediate)
+bbbbbbbb gggggggg rrrrrrrr
+A color.
+
+`
+default_assembly = `
+point 0, 0
+color 255, 0, 0
+
+point 100, 100
+color 0, 255, 0
+
+point 0, 100
+color 0, 0, 255
+`

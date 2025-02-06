@@ -1,0 +1,645 @@
+type Fixed S32
+const F_ZERO = <Fixed>0
+const F_ONE = <Fixed>65536
+
+const C_ZERO = <U8>48
+const C_DOT = <U8>46
+const C_DASH = <U8>45
+const C_SPACE = <U8>32
+const C_HASH = <U8>35
+const C_SLASH = <U8>47
+const C_PLUS = <U8>43
+const C_EQUAL = <U8>61
+const C_STAR = <U8>42
+const C_NEWLINE = <U8>10
+
+type StringBuilder [U8]
+
+def string_builder() StringBuilder {
+    let arr = array(2050, <U8> 0)
+    return <StringBuilder> arr
+}
+
+dot len(buffer: StringBuilder) Int {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    return <Int>index
+}
+
+def str(buffer: StringBuilder) String {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let arr = array(<Int>index, <U8> 0)
+    var i = <U16>0
+    while i < index {
+        arr[i] = <U8>(casted[i + 2])
+        i += 1
+    }
+    return <String>arr
+}
+
+dot place_string($buffer: StringBuilder, value: String) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let len = <U16>(value.len())
+    var i = <U16>0
+    while i < len {
+        casted[index + i + 2] = <U8>(value[i])
+        i += 1
+    }
+    dbuffer[0] += len
+}
+
+dot place_char($buffer: StringBuilder, value: U8) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = value
+    dbuffer[0] += 1
+}
+
+dot place_fixed($buffer: StringBuilder, value: Fixed) {
+    let a = <S32>value
+    var result = <S64>((a & 0x7fff0000) >> 16)
+    result *= 100000000000
+    result += <S64>((<S64>((<S64>a) & 0xffff)) * 1525878)
+    
+    if (a & 0x80000000) != 0 {
+        result -= 3276800000000000
+    }
+
+    let absresult = (result < 0) ? -result : result
+
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+
+    let d0 = <U8>((absresult / 1000000000000000) % 10)
+    let d1 = <U8>((absresult / 100000000000000) % 10)
+    let d2 = <U8>((absresult / 10000000000000) % 10)
+    let d3 = <U8>((absresult / 1000000000000) % 10)
+    let d4 = <U8>((absresult / 100000000000) % 10)
+    let d5 = <U8>((absresult / 10000000000) % 10)
+    let d6 = <U8>((absresult / 1000000000) % 10)
+    let d7 = <U8>((absresult / 100000000) % 10)
+    let d8 = <U8>((absresult / 10000000) % 10)
+    let d9 = <U8>((absresult / 1000000) % 10)
+    let d10= <U8>((absresult / 100000) % 10)
+    let d11= <U8>((absresult / 10000) % 10)
+    let d12= <U8>((absresult / 1000) % 10)
+    let d13= <U8>((absresult / 100) % 10)
+    let d14= <U8>((absresult / 10) % 10)
+    let d15= <U8>(absresult % 10)
+    
+    casted[index + 2] = (result < 0) ? C_DASH : C_SPACE
+    casted[index + 3] = d0 + C_ZERO
+    casted[index + 4] = d1 + C_ZERO
+    casted[index + 5] = d2 + C_ZERO
+    casted[index + 6] = d3 + C_ZERO
+    casted[index + 7] = d4 + C_ZERO
+    casted[index + 8] = C_DOT
+    casted[index + 9] = d5 + C_ZERO
+    casted[index + 10] = d6 + C_ZERO
+    casted[index + 11] = d7 + C_ZERO
+    casted[index + 12] = d8 + C_ZERO
+    casted[index + 13] = d9 + C_ZERO
+    casted[index + 14] = d10 + C_ZERO
+    casted[index + 15] = d11 + C_ZERO
+    casted[index + 16] = d12 + C_ZERO
+    casted[index + 17] = d13 + C_ZERO
+    casted[index + 18] = d14 + C_ZERO
+    casted[index + 19] = d15 + C_ZERO
+    dbuffer[0] += 18
+}
+
+dot place_hex($buffer: StringBuilder, value: U24) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = C_HASH
+    casted[index + 3] = hex_digit(<U8>((value >> 4) & 0xf))
+    casted[index + 4] = hex_digit(<U8>((value) & 0xf))
+    casted[index + 5] = hex_digit(<U8>((value >> 12) & 0xf))
+    casted[index + 6] = hex_digit(<U8>((value >> 8) & 0xf))
+    casted[index + 7] = hex_digit(<U8>((value >> 20) & 0xf))
+    casted[index + 8] = hex_digit(<U8>((value >> 16) & 0xf))
+    dbuffer[0] += 7
+}
+
+def hex_digit(value: U8) U8 {
+    if value <= 0x9 {
+        return value + C_ZERO
+    }
+    if value <= 0xf {
+        return value + C_ZERO + 7
+    }
+    return C_ZERO
+}
+
+def str(value: Fixed) String {
+    let a = <S32>value
+    var result = <S64>((a & 0x7fff0000) >> 16)
+    result *= 100000000000
+    result += <S64>((<S64>((<S64>a) & 0xffff)) * 1525878)
+    
+    if (a & 0x80000000) != 0 {
+        result -= 3276800000000000
+    }
+
+    let absresult = (result < 0) ? -result : result
+
+    let d0 = <U8>((absresult / 1000000000000000) % 10)
+    let d1 = <U8>((absresult / 100000000000000) % 10)
+    let d2 = <U8>((absresult / 10000000000000) % 10)
+    let d3 = <U8>((absresult / 1000000000000) % 10)
+    let d4 = <U8>((absresult / 100000000000) % 10)
+    let d5 = <U8>((absresult / 10000000000) % 10)
+    let d6 = <U8>((absresult / 1000000000) % 10)
+    let d7 = <U8>((absresult / 100000000) % 10)
+    let d8 = <U8>((absresult / 10000000) % 10)
+    let d9 = <U8>((absresult / 1000000) % 10)
+    let d10= <U8>((absresult / 100000) % 10)
+    let d11= <U8>((absresult / 10000) % 10)
+    let d12= <U8>((absresult / 1000) % 10)
+    let d13= <U8>((absresult / 100) % 10)
+    let d14= <U8>((absresult / 10) % 10)
+    let d15= <U8>(absresult % 10)
+    
+    let str = array(18, <U8>0)
+    str[0] = (result < 0) ? C_DASH : C_SPACE
+    str[1] = d0 + C_ZERO
+    str[2] = d1 + C_ZERO
+    str[3] = d2 + C_ZERO
+    str[4] = d3 + C_ZERO
+    str[5] = d4 + C_ZERO
+    str[6] = C_DOT
+    str[7] = d5 + C_ZERO
+    str[8] = d6 + C_ZERO
+    str[9] = d7 + C_ZERO
+    str[10] = d8 + C_ZERO
+    str[11] = d9 + C_ZERO
+    str[12] = d10 + C_ZERO
+    str[13] = d11 + C_ZERO
+    str[14] = d12 + C_ZERO
+    str[15] = d13 + C_ZERO
+    str[16] = d14 + C_ZERO
+    str[17] = d15 + C_ZERO
+    return <String>str
+}
+
+def to_fixed(a: Int) Fixed {
+    let x = a < 0 ? -a : a
+    return <Fixed>(a < 0 ? ((<U32>x) << 16) : -((<U32>x) << 16))
+}
+
+binary +(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> a
+    let bvalue = <Int> b
+    var sum = avalue + bvalue
+
+    if sum > 2147483647 {
+        sum = 2147483647
+    }
+    if sum < -2147483648 {
+        sum = -2147483648
+    }
+    return <Fixed> (<S32>sum)
+}
+
+binary -(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> a
+    let bvalue = <Int> b
+    var sum = avalue - bvalue
+
+    if sum > 2147483647 {
+        sum = 2147483647
+    }
+    if sum < -2147483648 {
+        sum = -2147483648
+    }
+    return <Fixed> (<S32>sum)
+}
+
+unary -(a: Fixed) Fixed {
+    return <Fixed>(-(<S32>a))
+}
+
+binary *(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> (<S32>a)
+    let bvalue = <Int> (<S32>b)
+    var atimesb = (avalue * bvalue) / 65536
+
+    if atimesb > 2147483647 {
+        atimesb = 2147483647
+    }
+    if atimesb < -2147483648 {
+        atimesb = -2147483648
+    }
+    return <Fixed> (<S32> atimesb)
+}
+
+binary /(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> (<S32>a)
+    let bvalue = <Int> (<S32>b)
+    if bvalue == 0 {
+        return avalue >= 0 ? <Fixed>(<S32>(2147483647)) : <Fixed>(<S32>(-2147483648))
+    }
+    var adividedbyb = (avalue * 65536) / bvalue
+
+    if adividedbyb > 2147483647 {
+        adividedbyb = 2147483647
+    }
+    if adividedbyb < -2147483648 {
+        adividedbyb = -2147483648
+    }
+    return <Fixed> (<S32> adividedbyb)
+}
+
+def sin(x: Fixed) Fixed {
+    let a1 = to_fixed(6)
+    let a2 = to_fixed(120)
+    let a3 = to_fixed(5040)
+
+    return x - (x*x*x)/a1 + (x*x*x*x*x)/a2 - (x*x*x*x*x*x*x)/a3
+}
+
+def cos(x: Fixed) Fixed {
+    let a1 = to_fixed(2)
+    let a2 = to_fixed(24)
+    let a3 = to_fixed(720)
+
+    return F_ONE - (x*x)/a1 + (x*x*x*x)/a2 - (x*x*x*x*x*x)/a3
+}
+
+type Vector [U64]
+const V_ZERO = <Vector>[0, 0]
+
+def pack(x: Fixed, y: Fixed, z: Fixed, w: Fixed) Vector {
+    let ux = <U64>(<U32>(<S32>x))
+    let uy = <U64>(<U32>(<S32>y))
+    let uz = <U64>(<U32>(<S32>z))
+    let uw = <U64>(<U32>(<S32>w))
+
+    let vec = array(2, <U64>0)
+    vec[0] = ux | (uy<<32)
+    vec[1] = uz | (uw<<32)
+
+    return <Vector>vec
+}
+
+def combine(xy: U64, zw: U64) Vector {
+    let vec = array(2, xy)
+    vec[1] = zw
+    return <Vector>vec
+}
+
+dot x(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[0])
+}
+
+dot y(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[0] >> 32)
+}
+
+dot z(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[1])
+}
+
+dot w(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[1] >> 32)
+}
+
+dot xy(v: Vector) U64 {
+    return (<[U64]>v)[0]
+}
+
+dot zw(v: Vector) U64 {
+    return (<[U64]>v)[1]
+}
+
+dot unpack(v: Vector) [Fixed] {
+    let result = array(4, <Fixed>0)
+    result[0] = v.x()
+    result[1] = v.y()
+    result[2] = v.z()
+    result[3] = v.w()
+    return result
+}
+
+binary +(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] + bp[0], ap[1] + bp[1], ap[2] + bp[2], ap[3] + bp[3])
+}
+
+binary -(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] - bp[0], ap[1] - bp[1], ap[2] - bp[2], ap[3] - bp[3])
+}
+
+binary *(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] * bp[0], ap[1] * bp[1], ap[2] * bp[2], ap[3] * bp[3])
+}
+
+binary /(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] / bp[0], ap[1] / bp[1], ap[2] / bp[2], ap[3] / bp[3])
+}
+
+binary ==(a: Vector, b: Vector) Bool {
+    let aa = <[U64]>a
+    let ba = <[U64]>b
+    return aa[0] == ba[0] && aa[1] == ba[1]
+}
+
+dot dot_product(a: Vector, b: Vector) Fixed {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return ((ap[0] * bp[0]) + (ap[1] * bp[1])) + ((ap[2] * bp[2]) + (ap[3] * bp[3]))
+}
+
+dot wedge_product(a: Vector, b: Vector) Fixed {
+    return (a.x() * b.y()) - (a.y() * b.x())
+}
+
+def sarea(a: Vector, b: Vector, c: Vector) Fixed {
+    return (a-c).wedge_product(b-c)
+}
+
+type Matrix [Vector]
+
+def pack(c1: Vector, c2: Vector, c3: Vector, c4: Vector) Matrix {
+    let result = array(4, <Vector> 0)
+    result[0] = c1
+    result[1] = c2
+    result[2] = c3
+    result[3] = c4
+    return <Matrix>result
+}
+
+dot c1(m: Matrix) Vector {
+    return (<[Vector]>m)[0]
+}
+
+dot c2(m: Matrix) Vector {
+    return (<[Vector]>m)[1]
+}
+
+dot c3(m: Matrix) Vector {
+    return (<[Vector]>m)[2]
+}
+
+dot c4(m: Matrix) Vector {
+    return (<[Vector]>m)[3]
+}
+
+dot unpack(m: Matrix) [Vector] {
+    return (<[Vector]>m)
+}
+
+binary +(a: Matrix, b: Matrix) Matrix {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] + bp[0], ap[1] + bp[1], ap[2] + bp[2], ap[3] + bp[3])
+}
+
+dot transpose(m: Matrix) Matrix {
+    let mv = m.unpack()
+    let m0 = mv[0].unpack()
+    let m1 = mv[1].unpack()
+    let m2 = mv[2].unpack()
+    let m3 = mv[3].unpack()
+    return pack(
+        pack(m0[0], m1[0], m2[0], m3[0]),
+        pack(m0[1], m1[1], m2[1], m3[1]),
+        pack(m0[2], m1[2], m2[2], m3[2]),
+        pack(m0[3], m1[3], m2[3], m3[3]))
+}
+
+binary *(a: Matrix, b: Matrix) Matrix {
+    let ta = a.transpose()
+    let tap = ta.unpack()
+    let bp = b.unpack()
+    return pack(
+        pack(tap[0].dot_product(bp[0]), tap[1].dot_product(bp[0]), tap[2].dot_product(bp[0]), tap[3].dot_product(bp[0])),
+        pack(tap[0].dot_product(bp[1]), tap[1].dot_product(bp[1]), tap[2].dot_product(bp[1]), tap[3].dot_product(bp[1])),
+        pack(tap[0].dot_product(bp[2]), tap[1].dot_product(bp[2]), tap[2].dot_product(bp[2]), tap[3].dot_product(bp[2])),
+        pack(tap[0].dot_product(bp[3]), tap[1].dot_product(bp[3]), tap[2].dot_product(bp[3]), tap[3].dot_product(bp[3])))
+}
+
+binary *(a: Matrix, v: Vector) Vector {
+    let ta = a.transpose()
+    let tap = ta.unpack()
+    return pack(tap[0].dot_product(v), tap[1].dot_product(v), tap[2].dot_product(v), tap[3].dot_product(v))
+}
+
+def draw_matrix_column(colIndex: Int, col: Vector, id: String) {
+    ui_set_text(`{id}0{colIndex}`, str(col.x()))
+    ui_set_text(`{id}1{colIndex}`, str(col.y()))
+    ui_set_text(`{id}2{colIndex}`, str(col.z()))
+    ui_set_text(`{id}3{colIndex}`, str(col.w()))
+}
+
+def identity() Matrix {
+    return pack(
+        pack( F_ONE, F_ZERO, F_ZERO, F_ZERO),
+        pack(F_ZERO,  F_ONE, F_ZERO, F_ZERO),
+        pack(F_ZERO, F_ZERO,  F_ONE, F_ZERO),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def scale(sx: Fixed, sy: Fixed, sz: Fixed) Matrix {
+    return pack(
+        pack(    sx, F_ZERO, F_ZERO, F_ZERO),
+        pack(F_ZERO,     sy, F_ZERO, F_ZERO),
+        pack(F_ZERO, F_ZERO,     sz, F_ZERO),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def translate(tx: Fixed, ty: Fixed, tz: Fixed) Matrix {
+    return pack(
+        pack( F_ONE, F_ZERO, F_ZERO,     tx),
+        pack(F_ZERO,  F_ONE, F_ZERO,     ty),
+        pack(F_ZERO, F_ZERO,  F_ONE,     tz),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def rotate_x(rad: Fixed) Matrix {
+    let s = sin(rad)
+    let c = cos(rad)
+    return pack(
+        pack( F_ONE, F_ZERO, F_ZERO, F_ZERO),
+        pack(F_ZERO,      c,     -s, F_ZERO),
+        pack(F_ZERO,      s,      c, F_ZERO),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def rotate_y(rad: Fixed) Matrix {
+    let s = sin(rad)
+    let c = cos(rad)
+    return pack(
+        pack(     c, F_ZERO,      s, F_ZERO),
+        pack(F_ZERO,  F_ONE, F_ZERO, F_ZERO),
+        pack(    -s, F_ZERO,      c, F_ZERO),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def rotate_z(rad: Fixed) Matrix {
+    let s = sin(rad)
+    let c = cos(rad)
+    return pack(
+        pack(     c,     -s, F_ZERO, F_ZERO),
+        pack(     s,      c, F_ZERO, F_ZERO),
+        pack(F_ZERO, F_ZERO,  F_ONE, F_ZERO),
+        pack(F_ZERO, F_ZERO, F_ZERO,  F_ONE))
+}
+
+def permute(x: U64) U64 {
+    var p = x
+    p ^= p << 7
+    p ^= p >> 9
+    p ^= p << 8
+    p ^= p << 15
+    p ^= p >> 17
+    p ^= p << 16
+    p ^= p << 31
+    p ^= p >> 33
+    p ^= p << 32
+    p ^= p << 63
+    p ^= p >> 65
+    p ^= p << 64
+    return p
+}
+
+def get_matrix(x: U64) Matrix {
+    switch x % 10
+        0 {
+            return translate(
+                to_fixed(<Int>(<S8>x & 0xff)),
+                to_fixed(<Int>(<S8>x & 0xff)),
+                to_fixed(<Int>(<S8>x & 0xff)))
+        }
+        1 {
+            return rotate_x(to_fixed(<Int>(<S8>x & 0xff)) * to_fixed(201) / to_fixed(4096))
+        }
+        2 {
+            return rotate_y(to_fixed(<Int>(<S8>x & 0xff)) * to_fixed(201) / to_fixed(4096))
+        }
+        3 {
+            return rotate_z(to_fixed(<Int>(<S8>x & 0xff)) * to_fixed(201) / to_fixed(4096))
+        }
+        4 {
+            return scale(
+                to_fixed(<Int>(<S8>x & 0xff)) / to_fixed(64),
+                to_fixed(<Int>(<S8>x & 0xff)) / to_fixed(64),
+                to_fixed(<Int>(<S8>x & 0xff)) / to_fixed(64))
+        }
+    return identity()
+}
+
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+
+    var x = <U64>tick
+    
+    var m = identity()
+    x = permute(x)
+    m = m * get_matrix(x)
+
+    x = permute(x)
+    m = m * get_matrix(x)
+
+    x = permute(x)
+    m = m * get_matrix(x)
+
+    inputs[0] = <Int>m.c1().xy()
+    inputs[1] = <Int>m.c1().zw()
+    inputs[2] = <Int>m.c2().xy()
+    inputs[3] = <Int>m.c2().zw()
+    inputs[4] = <Int>m.c3().xy()
+    inputs[5] = <Int>m.c3().zw()
+    inputs[6] = <Int>m.c4().xy()
+    inputs[7] = <Int>m.c4().zw()
+
+    x = permute(x)
+    let v0xy = x & 0x001fffff001fffff
+    inputs[8] = <Int>v0xy
+    x = permute(x)
+    let v0zw = (x & 0x00000000001fffff) | 0x0001000000000000
+    inputs[9] = <Int>v0zw
+
+    if tick < 32 {
+        let v = combine(v0xy, v0zw)
+        var w = m * v
+        w = pack(
+            w.x()/w.w(),
+            w.y()/w.w(),
+            w.z()/w.w(),
+            F_ONE)
+
+        draw_matrix_column(0, m.c1(), "a")
+        draw_matrix_column(1, m.c2(), "a")
+        draw_matrix_column(2, m.c3(), "a")
+        draw_matrix_column(3, m.c4(), "a")
+
+        ui_set_text(`vx`, str(v.x()))
+        ui_set_text(`vy`, str(v.y()))
+        ui_set_text(`vz`, str(v.z()))
+        ui_set_text(`vw`, str(v.w()))
+
+        ui_set_text(`px`, str(w.x()))
+        ui_set_text(`py`, str(w.y()))
+        ui_set_text(`pz`, str(w.z()))
+    }
+    if tick == 32 {
+        draw_matrix_column(0, V_ZERO, "a")
+        draw_matrix_column(1, V_ZERO, "a")
+        draw_matrix_column(2, V_ZERO, "a")
+        draw_matrix_column(3, V_ZERO, "a")
+
+        ui_set_text(`vx`, str(F_ZERO))
+        ui_set_text(`vy`, str(F_ZERO))
+        ui_set_text(`vz`, str(F_ZERO))
+        ui_set_text(`vw`, str(F_ONE))
+
+        ui_set_text(`px`, str(F_ZERO))
+        ui_set_text(`py`, str(F_ZERO))
+        ui_set_text(`pz`, str(F_ZERO))
+    }
+}
+
+def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
+    
+    let a = pack(
+        combine(<U64>inputs[0], <U64>inputs[1]),
+        combine(<U64>inputs[2], <U64>inputs[3]),
+        combine(<U64>inputs[4], <U64>inputs[5]),
+        combine(<U64>inputs[6], <U64>inputs[7]))
+    let v = combine(<U64>inputs[8], <U64>inputs[9])
+    var w = a * v
+    w = pack(
+        w.x()/w.w(),
+        w.y()/w.w(),
+        w.z()/w.w(),
+        F_ONE)
+
+    let pw = pack(
+        <Fixed>(<U32>outputs[0]),
+        <Fixed>(<U32>outputs[1]),
+        <Fixed>(<U32>outputs[2]),
+        F_ONE)
+
+    if pw == w {
+        if tick == 0x7fff {
+            return win
+        }
+    } else {
+        set_error(`Expected [{w.x()}, {w.y()}, {w.z()}, {w.w()}], but got [{pw.x()}, {pw.y()}, {pw.z()}, {pw.w()}]`)
+        return fail
+    }
+}

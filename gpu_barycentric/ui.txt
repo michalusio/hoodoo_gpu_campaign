@@ -1,0 +1,6 @@
+[text id="is" text="Is point          in triangle       ,      ,       ?" x=-400 size=24 y=100 font=mono align=left]
+
+[text id="x" text="" size=24 x=-400 y=90 font=mono align=left]
+[text id="y" text="" size=24 x=-400 y=110 font=mono align=left]
+
+[text id="result" text="" size=24 x=350 y=100 font=mono align=left]

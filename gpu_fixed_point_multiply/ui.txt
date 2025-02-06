@@ -1,0 +1,1 @@
+[text id="formula" text="... * ... = ..." size=24 y=90 font=mono]

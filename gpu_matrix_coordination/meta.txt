@@ -1,0 +1,66 @@
+kind = combinational
+title = "Matrix Coordination"
+size = [-48, -48, 47, 47]
+background = 5
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+input_labels = [["Instruction"]]
+output_labels = ["P1x", "P1y", "P1z", "P2x", "P2y", "P2z", "P3x", "P3y", "P3z"]
+dialogue = [
+  (alien_centered, "Using only one pre-made matrix only allows us to render the scene from a single view, so we have to be able to change it."),
+  (info, "First of all, we need to create the infrastructure to test your circuit.
+Add a ROM and turn it into an assembler. Set the ROM's size to 32768 bytes.
+We will be reading the whole 4x4 matrix from it, so you need to change the width to 512 bits."),
+  (info, "Next, you will need to decode a 32-bit instruction coming from the input, and depending on it perform the operations:
+[code][color=#ff9800]0[/color][color=#c2c2c2]XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX[/color][/code]
+Reserved
+[code][color=#ff9800]1[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Copy the MVP matrix from address [color=#0098ff]A[/color]
+
+The MVP should be copied to a register so we don't have to access the memory for it, as we will be reading triangle data from memory, too.")
+  (info, "With the MVP matrix, we can map the vertices coming from memory from 3D to 2D.
+1. Read the triangle data (XYZ vertex (96bits) and RGB color (24bits), three times).
+2. Extend the vertexes into 4D by appending W=1.
+3. Project the vertexes using the saved MVP matrix."),
+  (info, "[center]Return the points transformed by the MVP matrices.[/center]")
+]
+default_isa_spec = `
+[settings]
+name = "Hoodoo"
+
+[fields]
+
+[instructions]
+
+vertex %x(immediate).%xd(immediate), %y(immediate).%yd(immediate), %z(immediate).%zd(immediate)
+%xdd = %xd / 625
+%ydd = %yd / 625
+%zdd = %zd / 625
+00000000 0000%xdd[3:0] %x[7:0] %x[15:8] 00000000 0000%ydd[3:0] %y[7:0] %y[15:8] 00000000 0000%zdd[3:0] %z[7:0] %z[15:8]
+A 3D vertex.
+
+color %r(immediate), %g(immediate), %b(immediate)
+bbbbbbbb gggggggg rrrrrrrr
+A color.
+
+mcol %a(immediate).%ad(immediate), %b(immediate).%bd(immediate), %c(immediate).%cd(immediate), %d(immediate).%dd(immediate)
+%add = %ad / 625
+%bdd = %bd / 625
+%cdd = %cd / 625
+%ddd = %dd / 625
+00000000 0000%add[3:0] %a[7:0] %a[15:8] 00000000 0000%bdd[3:0] %b[7:0] %b[15:8] 00000000 0000%cdd[3:0] %c[7:0] %c[15:8] 00000000 0000%ddd[3:0] %d[7:0] %d[15:8]
+A 4x4 matrix's column.
+`
+default_assembly = `
+; 1.Blue
+vertex 3.0, 2.0, 1.0
+color 255, 0, 0
+vertex 10.0, 2.0, 3.0
+color 0, 255, 0
+vertex 6.0, 5.0, 2.0
+color 0, 0, 255
+
+mcol 1.0, 0.0, 0.0, 0.0
+mcol 0.0, 1.0, 0.0, 0.0
+mcol 0.0, 0.0, 1.0, 0.0
+mcol 0.0, 0.0, 0.0, 1.0
+`

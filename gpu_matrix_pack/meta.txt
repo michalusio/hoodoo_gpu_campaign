@@ -1,0 +1,18 @@
+kind = combinational
+no_score = true
+title = "Matrix Packaging"
+size = [-64, -72, 31, 71]
+background = 5
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+input_labels = [["m00"],["m10"],["m20"],["m30"],["m01"],["m11"],["m21"],["m31"],["m02"],["m12"],["m22"],["m32"],["m03"],["m13"],["m23"],["m33"]]
+output_labels = ["COLUMN 0 xy", "COLUMN 0 zw", "COLUMN 1 xy", "COLUMN 1 zw", "COLUMN 2 xy", "COLUMN 2 zw", "COLUMN 3 xy", "COLUMN 3 zw"]
+dialogue = [
+  (alien_centered, "3D graphics requires doing scary computations.
+To make them less scary we pack them into boxes which we call matrices."),
+  (alien_centered, "The most commonly used matrix size for 3D graphics is 4x4, which is composed by 16 elements.
+Matrices can be stored row-by-row, or column-by-column.
+We will store them column-by-column, but it generally doesn't matter."),
+  (info, "Package 16 numbers into four vectors, making a column-major order matrix.
+
+Hint: The second index of the input tells you which column the number belongs to."),
+]

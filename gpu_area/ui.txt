@@ -1,0 +1,14 @@
+[text id="area" text="area of triangle" size=24 x=-550 y=100 font=mono]
+
+[text id="x0" text="..." size=24 x=-300 y=90 font=mono]
+[text id="y0" text="..." size=24 x=-300 y=110 font=mono]
+
+[text id="x1" text="..." size=24 x=-25 y=90 font=mono]
+[text id="y1" text="..." size=24 x=-25 y=110 font=mono]
+
+[text id="x2" text="..." size=24 x=250 y=90 font=mono]
+[text id="y2" text="..." size=24 x=250 y=110 font=mono]
+
+[text id="is" text="is" size=24 x=400 y=100 font=mono]
+
+[text id="result" text="..." size=24 x=550 y=100 font=mono]

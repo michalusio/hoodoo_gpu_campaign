@@ -1,0 +1,568 @@
+type Fixed S32
+
+const C_ZERO = <U8>48
+const C_DOT = <U8>46
+const C_DASH = <U8>45
+const C_SPACE = <U8>32
+const C_HASH = <U8>35
+const C_SLASH = <U8>47
+const C_PLUS = <U8>43
+const C_EQUAL = <U8>61
+const C_STAR = <U8>42
+
+type StringBuilder [U8]
+
+def string_builder() StringBuilder {
+    let arr = array(2050, <U8> 0)
+    return <StringBuilder> arr
+}
+
+def str(buffer: StringBuilder) String {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let arr = array(<Int>index, <U8> 0)
+    var i = <U16>0
+    while i < index {
+        arr[i] = <U8>(casted[i + 2])
+        i += 1
+    }
+    return <String>arr
+}
+
+dot place_string($buffer: StringBuilder, value: String) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let len = <U16>(value.len())
+    var i = <U16>0
+    while i < len {
+        casted[index + i + 2] = <U8>(value[i])
+        i += 1
+    }
+    dbuffer[0] += len
+}
+
+dot place_char($buffer: StringBuilder, value: U8) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = value
+    dbuffer[0] += 1
+}
+
+dot place_fixed($buffer: StringBuilder, value: Fixed) {
+    let a = <S32>value
+    var result = <S64>((a & 0x7fff0000) >> 16)
+    result *= 100000000000
+    result += <S64>((<S64>((<S64>a) & 0xffff)) * 1525878)
+    
+    if (a & 0x80000000) != 0 {
+        result -= 3276800000000000
+    }
+
+    let absresult = (result < 0) ? -result : result
+
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+
+    let d0 = <U8>((absresult / 1000000000000000) % 10)
+    let d1 = <U8>((absresult / 100000000000000) % 10)
+    let d2 = <U8>((absresult / 10000000000000) % 10)
+    let d3 = <U8>((absresult / 1000000000000) % 10)
+    let d4 = <U8>((absresult / 100000000000) % 10)
+    let d5 = <U8>((absresult / 10000000000) % 10)
+    let d6 = <U8>((absresult / 1000000000) % 10)
+    let d7 = <U8>((absresult / 100000000) % 10)
+    let d8 = <U8>((absresult / 10000000) % 10)
+    let d9 = <U8>((absresult / 1000000) % 10)
+    let d10= <U8>((absresult / 100000) % 10)
+    let d11= <U8>((absresult / 10000) % 10)
+    let d12= <U8>((absresult / 1000) % 10)
+    let d13= <U8>((absresult / 100) % 10)
+    let d14= <U8>((absresult / 10) % 10)
+    let d15= <U8>(absresult % 10)
+    
+    casted[index + 2] = (result < 0) ? C_DASH : C_SPACE
+    casted[index + 3] = d0 + C_ZERO
+    casted[index + 4] = d1 + C_ZERO
+    casted[index + 5] = d2 + C_ZERO
+    casted[index + 6] = d3 + C_ZERO
+    casted[index + 7] = d4 + C_ZERO
+    casted[index + 8] = C_DOT
+    casted[index + 9] = d5 + C_ZERO
+    casted[index + 10] = d6 + C_ZERO
+    casted[index + 11] = d7 + C_ZERO
+    casted[index + 12] = d8 + C_ZERO
+    casted[index + 13] = d9 + C_ZERO
+    casted[index + 14] = d10 + C_ZERO
+    casted[index + 15] = d11 + C_ZERO
+    casted[index + 16] = d12 + C_ZERO
+    casted[index + 17] = d13 + C_ZERO
+    casted[index + 18] = d14 + C_ZERO
+    casted[index + 19] = d15 + C_ZERO
+    dbuffer[0] += 18
+}
+
+dot place_hex($buffer: StringBuilder, value: U24) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = C_HASH
+    casted[index + 3] = hex_digit(<U8>((value >> 4) & 0xf))
+    casted[index + 4] = hex_digit(<U8>((value) & 0xf))
+    casted[index + 5] = hex_digit(<U8>((value >> 12) & 0xf))
+    casted[index + 6] = hex_digit(<U8>((value >> 8) & 0xf))
+    casted[index + 7] = hex_digit(<U8>((value >> 20) & 0xf))
+    casted[index + 8] = hex_digit(<U8>((value >> 16) & 0xf))
+    dbuffer[0] += 7
+}
+
+def hex_digit(value: U8) U8 {
+    if value <= 0x9 {
+        return value + C_ZERO
+    }
+    if value <= 0xf {
+        return value + C_ZERO + 7
+    }
+    return C_ZERO
+}
+
+def str(value: Fixed) String {
+    let a = <S32>value
+    var result = <S64>((a & 0x7fff0000) >> 16)
+    result *= 100000000000
+    result += <S64>((<S64>((<S64>a) & 0xffff)) * 1525878)
+    
+    if (a & 0x80000000) != 0 {
+        result -= 3276800000000000
+    }
+
+    let absresult = (result < 0) ? -result : result
+
+    let d0 = <U8>((absresult / 1000000000000000) % 10)
+    let d1 = <U8>((absresult / 100000000000000) % 10)
+    let d2 = <U8>((absresult / 10000000000000) % 10)
+    let d3 = <U8>((absresult / 1000000000000) % 10)
+    let d4 = <U8>((absresult / 100000000000) % 10)
+    let d5 = <U8>((absresult / 10000000000) % 10)
+    let d6 = <U8>((absresult / 1000000000) % 10)
+    let d7 = <U8>((absresult / 100000000) % 10)
+    let d8 = <U8>((absresult / 10000000) % 10)
+    let d9 = <U8>((absresult / 1000000) % 10)
+    let d10= <U8>((absresult / 100000) % 10)
+    let d11= <U8>((absresult / 10000) % 10)
+    let d12= <U8>((absresult / 1000) % 10)
+    let d13= <U8>((absresult / 100) % 10)
+    let d14= <U8>((absresult / 10) % 10)
+    let d15= <U8>(absresult % 10)
+    
+    let str = array(18, <U8>0)
+    str[0] = (result < 0) ? C_DASH : C_SPACE
+    str[1] = d0 + C_ZERO
+    str[2] = d1 + C_ZERO
+    str[3] = d2 + C_ZERO
+    str[4] = d3 + C_ZERO
+    str[5] = d4 + C_ZERO
+    str[6] = C_DOT
+    str[7] = d5 + C_ZERO
+    str[8] = d6 + C_ZERO
+    str[9] = d7 + C_ZERO
+    str[10] = d8 + C_ZERO
+    str[11] = d9 + C_ZERO
+    str[12] = d10 + C_ZERO
+    str[13] = d11 + C_ZERO
+    str[14] = d12 + C_ZERO
+    str[15] = d13 + C_ZERO
+    str[16] = d14 + C_ZERO
+    str[17] = d15 + C_ZERO
+    return <String>str
+}
+
+binary +(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> a
+    let bvalue = <Int> b
+    var sum = avalue + bvalue
+
+    if sum > 2147483647 {
+        sum = 2147483647
+    }
+    if sum < -2147483648 {
+        sum = -2147483648
+    }
+    return <Fixed> (<S32>sum)
+}
+
+binary -(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> a
+    let bvalue = <Int> b
+    var sum = avalue - bvalue
+
+    if sum > 2147483647 {
+        sum = 2147483647
+    }
+    if sum < -2147483648 {
+        sum = -2147483648
+    }
+    return <Fixed> (<S32>sum)
+}
+
+binary *(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> (<S32>a)
+    let bvalue = <Int> (<S32>b)
+    var atimesb = (avalue * bvalue) / 65536
+
+    if atimesb > 2147483647 {
+        atimesb = 2147483647
+    }
+    if atimesb < -2147483648 {
+        atimesb = -2147483648
+    }
+    return <Fixed> (<S32> atimesb)
+}
+
+binary /(a: Fixed, b: Fixed) Fixed {
+    let avalue = <Int> (<S32>a)
+    let bvalue = <Int> (<S32>b)
+    if bvalue == 0 {
+        return avalue >= 0 ? <Fixed>(<S32>(2147483647)) : <Fixed>(<S32>(-2147483648))
+    }
+    var adividedbyb = (avalue * 65536) / bvalue
+
+    if adividedbyb > 2147483647 {
+        adividedbyb = 2147483647
+    }
+    if adividedbyb < -2147483648 {
+        adividedbyb = -2147483648
+    }
+    return <Fixed> (<S32> adividedbyb)
+}
+
+type Vector [U64]
+
+def pack(x: Fixed, y: Fixed, z: Fixed, w: Fixed) Vector {
+    let ux = <U64>(<U32>(<S32>x))
+    let uy = <U64>(<U32>(<S32>y))
+    let uz = <U64>(<U32>(<S32>z))
+    let uw = <U64>(<U32>(<S32>w))
+
+    let vec = array(2, <U64>0)
+    vec[0] = ux | (uy<<32)
+    vec[1] = uz | (uw<<32)
+
+    return <Vector>vec
+}
+
+dot x(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[0])
+}
+
+dot y(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[0] >> 32)
+}
+
+dot z(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[1])
+}
+
+dot w(v: Vector) Fixed {
+    return <Fixed>((<[U64]>v)[1] >> 32)
+}
+
+dot unpack(v: Vector) [Fixed] {
+    let result = array(4, <Fixed>0)
+    result[0] = v.x()
+    result[1] = v.y()
+    result[2] = v.z()
+    result[3] = v.w()
+    return result
+}
+
+binary +(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] + bp[0], ap[1] + bp[1], ap[2] + bp[2], ap[3] + bp[3])
+}
+
+binary -(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] - bp[0], ap[1] - bp[1], ap[2] - bp[2], ap[3] - bp[3])
+}
+
+binary *(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] * bp[0], ap[1] * bp[1], ap[2] * bp[2], ap[3] * bp[3])
+}
+
+binary /(a: Vector, b: Vector) Vector {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] / bp[0], ap[1] / bp[1], ap[2] / bp[2], ap[3] / bp[3])
+}
+
+dot dot_product(a: Vector, b: Vector) Fixed {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return ((ap[0] * bp[0]) + (ap[1] * bp[1])) + ((ap[2] * bp[2]) + (ap[3] * bp[3]))
+}
+
+dot wedge_product(a: Vector, b: Vector) Fixed {
+    return (a.x() * b.y()) - (a.y() * b.x())
+}
+
+def sarea(a: Vector, b: Vector, c: Vector) Fixed {
+    return (a-c).wedge_product(b-c)
+}
+
+type Matrix [Vector]
+
+def pack(c1: Vector, c2: Vector, c3: Vector, c4: Vector) Matrix {
+    let result = array(4, <Vector> 0)
+    result[0] = c1
+    result[1] = c2
+    result[2] = c3
+    result[3] = c4
+    return <Matrix>result
+}
+
+dot c1(m: Matrix) Vector {
+    return (<[Vector]>m)[0]
+}
+
+dot c2(m: Matrix) Vector {
+    return (<[Vector]>m)[1]
+}
+
+dot c3(m: Matrix) Vector {
+    return (<[Vector]>m)[2]
+}
+
+dot c4(m: Matrix) Vector {
+    return (<[Vector]>m)[3]
+}
+
+dot unpack(m: Matrix) [Vector] {
+    return (<[Vector]>m)
+}
+
+binary +(a: Matrix, b: Matrix) Matrix {
+    let ap = a.unpack()
+    let bp = b.unpack()
+    return pack(ap[0] + bp[0], ap[1] + bp[1], ap[2] + bp[2], ap[3] + bp[3])
+}
+
+dot transpose(m: Matrix) Matrix {
+    let mv = m.unpack()
+    let m0 = mv[0].unpack()
+    let m1 = mv[1].unpack()
+    let m2 = mv[2].unpack()
+    let m3 = mv[3].unpack()
+    return pack(
+        pack(m0[0], m1[0], m2[0], m3[0]),
+        pack(m0[1], m1[1], m2[1], m3[1]),
+        pack(m0[2], m1[2], m2[2], m3[2]),
+        pack(m0[3], m1[3], m2[3], m3[3]))
+}
+
+binary *(a: Matrix, b: Matrix) Matrix {
+    let ta = a.transpose()
+    let tap = ta.unpack()
+    let bp = b.unpack()
+    return pack(
+        pack(tap[0].dot_product(bp[0]), tap[0].dot_product(bp[1]), tap[0].dot_product(bp[2]), tap[0].dot_product(bp[3])),
+        pack(tap[1].dot_product(bp[0]), tap[1].dot_product(bp[1]), tap[1].dot_product(bp[2]), tap[1].dot_product(bp[3])),
+        pack(tap[2].dot_product(bp[0]), tap[2].dot_product(bp[1]), tap[2].dot_product(bp[2]), tap[2].dot_product(bp[3])),
+        pack(tap[3].dot_product(bp[0]), tap[3].dot_product(bp[1]), tap[3].dot_product(bp[2]), tap[3].dot_product(bp[3])))
+}
+
+def get_expected(inputs: [Int]) U24 {
+    var w0 = <Int>(<U32>inputs[0])
+    var c0 = <U24>inputs[1]
+    var w1 = <Int>(<U32>inputs[2])
+    var c1 = <U24>inputs[3]
+    var w2 = <Int>(<U32>inputs[4])
+    var c2 = <U24>inputs[5]
+
+    var r0 = <Int> (c0 & 0xff)
+    var g0 = <Int> ((c0 >> 8) & 0xff)
+    var b0 = <Int> ((c0 >> 16) & 0xff)
+
+    var r1 = <Int> (c1 & 0xff)
+    var g1 = <Int> ((c1 >> 8) & 0xff)
+    var b1 = <Int> ((c1 >> 16) & 0xff)
+
+    var r2 = <Int> (c2 & 0xff)
+    var g2 = <Int> ((c2 >> 8) & 0xff)
+    var b2 = <Int> ((c2 >> 16) & 0xff)
+
+    var r = <U24> ((w0 * r0 + w1 * r1 + w2 * r2) >> 16)
+    var g = <U24> ((w0 * g0 + w1 * g1 + w2 * g2) >> 16)
+    var b = <U24> ((w0 * b0 + w1 * b1 + w2 * b2) >> 16)
+
+    return r | (g << 8) | (b << 16)
+}
+
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+
+    var x = tick + 13
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+
+    var a0 = x & 0x7FFF
+    var a1 = (x >> 15) & 0x7FFF
+    var a2 = 0x10000 - a0 - a1
+
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+
+    inputs[0] = <Int>(<U32>a0)
+    inputs[1] = x & 0xffffff
+
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+
+    inputs[2] = <Int>(<U32>a1)
+    inputs[3] = x & 0xffffff
+
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+
+    inputs[4] = <Int>(<U32>a2)
+    inputs[5] = x & 0xffffff
+
+    let expected = get_expected(inputs)
+
+    let builder = string_builder()
+    $builder.place_fixed(<Fixed>inputs[0])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_STAR)
+    $builder.place_char(C_SPACE)
+    $builder.place_hex(<U24>inputs[1])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_PLUS)
+    $builder.place_char(C_SPACE)
+    $builder.place_fixed(<Fixed>inputs[2])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_STAR)
+    $builder.place_char(C_SPACE)
+    $builder.place_hex(<U24>inputs[3])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_PLUS)
+    $builder.place_char(C_SPACE)
+    $builder.place_fixed(<Fixed>inputs[4])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_STAR)
+    $builder.place_char(C_SPACE)
+    $builder.place_hex(<U24>inputs[5])
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_EQUAL)
+    $builder.place_char(C_SPACE)
+    $builder.place_hex(expected)
+    ui_set_text("formula", str(builder))
+}
+
+def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
+    
+    let expected = <U64>get_expected(inputs)
+    let provided = <U64>outputs[0]
+
+    if provided == expected {
+        if tick == 0xffff {
+            return win
+        }
+    } else {
+        set_error(`Expected {expected}, but got {provided}`)
+        return fail
+    }
+}

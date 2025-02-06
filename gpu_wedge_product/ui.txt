@@ -1,0 +1,11 @@
+[text id="x0" text="..." size=24 x=-300 y=90 font=mono]
+[text id="y0" text="..." size=24 x=-300 y=110 font=mono]
+
+[text id="c" text="x" size=24 x=-150 y=100 font=mono]
+
+[text id="x1" text="..." size=24 y=90 font=mono]
+[text id="y1" text="..." size=24 y=110 font=mono]
+
+[text id="equals" text="=" size=24 x=150 y=100 font=mono]
+
+[text id="result" text="..." size=24 x=300 y=100 font=mono]

@@ -1,0 +1,30 @@
+kind = combinational
+title = "Table Flipping"
+no_score = true
+size = [-64, -72, 31, 71]
+background = 5
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+save_solution_as_custom = "Hoodoo/Matrix/Transpose"
+input_labels = [["COLUMN 0 xy"],["COLUMN 0 zw"],["COLUMN 1 xy"],["COLUMN 1 zw"],["COLUMN 2 xy"],["COLUMN 2 zw"],["COLUMN 3 xy"],["COLUMN 3 zw"]]
+output_labels = ["COLUMN 0 xy", "COLUMN 0 zw", "COLUMN 1 xy", "COLUMN 1 zw", "COLUMN 2 xy", "COLUMN 2 zw", "COLUMN 3 xy", "COLUMN 3 zw"]
+dialogue = [
+  (alien_centered, "An operation that doesn't exist for numbers or vectors, but exists for matrices is Transposition."),
+  (info, "Transposition works by flipping the matrix around its main diagonal, like that:[center][table=4]
+[cell]m_00[/cell] [cell]m_10[/cell] [cell]m_20[/cell] [cell]m_30[/cell]
+[cell]m_01[/cell] [cell]m_11[/cell] [cell]m_21[/cell] [cell]m_31[/cell]
+[cell]m_02[/cell] [cell]m_12[/cell] [cell]m_22[/cell] [cell]m_32[/cell]
+[cell]m_03[/cell] [cell]m_13[/cell] [cell]m_23[/cell] [cell]m_33[/cell]
+[/table][/center][center]V[/center][center][table=4]
+[cell]m_00[/cell] [cell]m_01[/cell] [cell]m_02[/cell] [cell]m_03[/cell]
+[cell]m_10[/cell] [cell]m_11[/cell] [cell]m_12[/cell] [cell]m_13[/cell]
+[cell]m_20[/cell] [cell]m_21[/cell] [cell]m_22[/cell] [cell]m_23[/cell]
+[cell]m_30[/cell] [cell]m_31[/cell] [cell]m_32[/cell] [cell]m_33[/cell]
+[/table][/center]
+"),
+  (alien_centered, "In other words:
+m_xy is swapped with m_yx."),
+  (info, "Transpose a matrix."),
+]
+post_mortem = [
+    (alien, `You can also think of the transposition as changing the arrangement of the cells between column-major and row-major. This information will be useful in the next level.`),
+]

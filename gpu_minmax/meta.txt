@@ -1,0 +1,14 @@
+kind = combinational
+title = "MinMaxxing"
+size = [-64, -64, 63, 63]
+background = 5
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+input_labels = [["X1"],["Y1"],["X2"],["Y2"],["X3"],["Y3"]]
+output_labels = ["MIN X", "MAX X", "MIN Y", "MAX Y"]
+save_solution_as_custom = "Hoodoo/Rasterizer/MinMax"
+dialogue = [
+  (alien_centered, "Our younglings learn the basics of image processing by filling in spaces with dyes, focusing on not going outside of the given bounds when doing it."),
+  (alien_centered, "We are expecting you to learn that too."),
+  (info, "You are given three sets of 16-bit XY coordinates as input.
+Your task is to output the bounds of those coordinates, that is - minimum X, maximum X, minimum Y, maximum Y."),
+]

@@ -1,0 +1,33 @@
+[text id="a00" text="0.0000" size=10 x=-310 y=70 font=mono]
+[text id="a10" text="0.0000" size=10 x=-310 y=90 font=mono]
+[text id="a20" text="0.0000" size=10 x=-310 y=110 font=mono]
+[text id="a30" text="0.0000" size=10 x=-310 y=130 font=mono]
+
+[text id="a01" text="0.0000" size=10 x=-200 y=70 font=mono]
+[text id="a11" text="0.0000" size=10 x=-200 y=90 font=mono]
+[text id="a21" text="0.0000" size=10 x=-200 y=110 font=mono]
+[text id="a31" text="0.0000" size=10 x=-200 y=130 font=mono]
+
+[text id="a02" text="0.0000" size=10 x=-90 y=70 font=mono]
+[text id="a12" text="0.0000" size=10 x=-90 y=90 font=mono]
+[text id="a22" text="0.0000" size=10 x=-90 y=110 font=mono]
+[text id="a32" text="0.0000" size=10 x=-90 y=130 font=mono]
+
+[text id="a03" text="0.0000" size=10 x=20 y=70 font=mono]
+[text id="a13" text="0.0000" size=10 x=20 y=90 font=mono]
+[text id="a23" text="0.0000" size=10 x=20 y=110 font=mono]
+[text id="a33" text="0.0000" size=10 x=20 y=130 font=mono]
+
+[text id="plus" text="*" size=10 x=120 y=100 font=mono]
+
+[text id="v00" text="0.0000" size=10 x=200 y=70 font=mono]
+[text id="v10" text="0.0000" size=10 x=200 y=90 font=mono]
+[text id="v20" text="0.0000" size=10 x=200 y=110 font=mono]
+[text id="v30" text="0.0000" size=10 x=200 y=130 font=mono]
+
+[text id="eq" text="=" size=10 x=310 y=100 font=mono]
+
+[text id="w00" text="0.0000" size=10 x=430 y=70 font=mono]
+[text id="w10" text="0.0000" size=10 x=430 y=90 font=mono]
+[text id="w20" text="0.0000" size=10 x=430 y=110 font=mono]
+[text id="w30" text="0.0000" size=10 x=430 y=130 font=mono]

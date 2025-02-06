@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files
+!.gitignore
+!fixed.si
+
+# Have to first unignore the directory itself
+!gpu_*/
+# Only then Git will look inside
+!gpu_*/*
+
+# I hate Mac
+gpu_*/.DS_Store

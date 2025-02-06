@@ -1,0 +1,18 @@
+[text id="lbr" text="<" size=24 x=-225 y=100 font=mono]
+
+[text id="x0" text="..." size=24 x=-150 y=70 font=mono]
+[text id="y0" text="..." size=24 x=-150 y=90 font=mono]
+[text id="z0" text="..." size=24 x=-150 y=110 font=mono]
+[text id="w0" text="..." size=24 x=-150 y=130 font=mono]
+
+[text id="c" text="," size=24 x=-75 y=100 font=mono]
+
+[text id="x1" text="..." size=24 y=70 font=mono]
+[text id="y1" text="..." size=24 y=90 font=mono]
+[text id="z1" text="..." size=24 y=110 font=mono]
+[text id="w1" text="..." size=24 y=130 font=mono]
+
+[text id="rbr" text=">" size=24 x=75 y=100 font=mono]
+[text id="equals" text="=" size=24 x=100 y=100 font=mono]
+
+[text id="result" text="..." size=24 x=175 y=100 font=mono]

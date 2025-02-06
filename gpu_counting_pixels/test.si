@@ -1,0 +1,82 @@
+
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+    if tick < 36 {
+        inputs[0] = 0
+        inputs[1] = 5
+        inputs[2] = 0
+        inputs[3] = 5
+        inputs[4] = 0
+        return
+    }
+    if tick == 36 {
+        inputs[0] = 0
+        inputs[1] = 5
+        inputs[2] = 0
+        inputs[3] = 5
+        inputs[4] = 1
+        return
+    }
+    if tick < 36 + 49 {
+        inputs[0] = 5
+        inputs[1] = 11
+        inputs[2] = 3
+        inputs[3] = 9
+        inputs[4] = 0
+        return
+    }
+    if tick == 36 + 49 {
+        inputs[0] = 5
+        inputs[1] = 11
+        inputs[2] = 3
+        inputs[3] = 9
+        inputs[4] = 1
+        return
+    }
+
+    inputs[0] = 15
+    inputs[1] = 15
+    inputs[2] = 10
+    inputs[3] = 10
+    inputs[4] = 0
+    return
+}
+
+def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
+    
+    var minx = <U16>inputs[0]
+    var maxx = <U16>inputs[1]
+    var miny = <U16>inputs[2]
+    var maxy = <U16>inputs[3]
+    var reset = <U16>inputs[4]
+
+    var x = <U16>outputs[0]
+    var y = <U16>outputs[1]
+    var linedone = <Bool>outputs[2]
+    var areadone = <Bool>outputs[3]
+
+    var t = <U16>tick
+
+    if t == 36 {
+        t -= 36
+    }
+    if t > 36 {
+        t -= 37
+    }
+
+    var expectedx = minx + (t % (maxx - minx + 1))
+    var expectedy = miny + (t / (maxx - minx + 1))
+    if expectedy > maxy {
+        expectedy = maxy
+    }
+    var expectedlinedone = expectedx == maxx
+    var expectedareadone = expectedlinedone && expectedy == maxy
+
+    if (expectedx != x || expectedy != y || expectedlinedone != linedone || expectedareadone != areadone) {
+        set_error(`Outputs should be ({expectedx}, {expectedy}, {expectedlinedone}, {expectedareadone}), but were ({x}, {y}, {linedone}, {areadone})`)
+        return fail
+    }
+    
+    if tick == 36 + 49 + 1 {
+        return win
+    }
+}

@@ -1,0 +1,57 @@
+
+def get_expected(a: S32, b: S32) S32 {
+    let avalue = <Int> a
+    let bvalue = <Int> b
+    var sum = avalue + bvalue
+
+    if sum > 2147483647 {
+        sum = 2147483647
+    }
+    if sum < -2147483648 {
+        sum = -2147483648
+    }
+    return <S32> sum
+}
+
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+
+    var x = tick
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+
+    inputs[0] = x & 0xffffffff
+    inputs[1] = (x >> 32) & 0xffffffff
+
+    let a = <S32> inputs[0]
+    let b = <S32> inputs[1]
+
+    ui_set_text("formula", `{a} + {b} = {get_expected(a, b)}`)
+}
+
+def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
+    
+    let a = <S32> inputs[0]
+    let b = <S32> inputs[1]
+
+    let expected = get_expected(a, b)
+    let provided = <S32> outputs[0]
+
+    if provided == expected {
+        if tick == 0xffff {
+            return win
+        }
+    } else {
+        set_error(`Expected {expected}, but got {provided}`)
+        return fail
+    }
+}

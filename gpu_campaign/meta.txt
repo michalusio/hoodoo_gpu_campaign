@@ -1,0 +1,15 @@
+kind = misc
+title = "GPU Campaign"
+size = [-64, -64, 63, 127]
+background = 5
+input_labels = []
+output_labels = []
+no_panel = true
+no_controls = true
+no_state_ui = true
+dialogue = [
+  (alien_centered, "All of Allegro's optimizations are nice and all, but forcing it to draw the game on the screen and receive the inputs and calculate what happens next is too slow."),
+  (alien_centered, "The way to alleviate the problem is to offload all drawing onto a separate circuit - the Graphics Processing Unit (GPU), if you will."),
+  (alien_centered, "The GPU architecture we will make will be called [color=#ff9800]Hoodoo[/color].
+This whole endeavour will require a lot of focus, and a lot of coffee.")
+]

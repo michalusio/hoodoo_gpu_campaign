@@ -1,0 +1,1 @@
+[text id="description" text="Project a triangle using a configurable MVP matrix" size=24 y=90]

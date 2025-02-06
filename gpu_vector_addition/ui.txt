@@ -1,0 +1,18 @@
+[text id="x0" text="..." size=24 x=-300 y=70 font=mono]
+[text id="y0" text="..." size=24 x=-300 y=90 font=mono]
+[text id="z0" text="..." size=24 x=-300 y=110 font=mono]
+[text id="w0" text="..." size=24 x=-300 y=130 font=mono]
+
+[text id="plus" text="+" size=24 x=-150 y=100 font=mono]
+
+[text id="x1" text="..." size=24 y=70 font=mono]
+[text id="y1" text="..." size=24 y=90 font=mono]
+[text id="z1" text="..." size=24 y=110 font=mono]
+[text id="w1" text="..." size=24 y=130 font=mono]
+
+[text id="equals" text="=" size=24 x=150 y=100 font=mono]
+
+[text id="x2" text="..." size=24 x=300 y=70 font=mono]
+[text id="y2" text="..." size=24 x=300 y=90 font=mono]
+[text id="z2" text="..." size=24 x=300 y=110 font=mono]
+[text id="w2" text="..." size=24 x=300 y=130 font=mono]

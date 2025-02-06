@@ -1,0 +1,86 @@
+
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+
+    var x = tick
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 24
+    var y = tick * 77
+    y ^= y << 7
+    y ^= y >> 9
+    y ^= y << 8
+    y ^= y << 15
+    y ^= y >> 17
+    y ^= y << 16
+    y ^= y << 23
+    y ^= y >> 25
+    y ^= y << 24
+    inputs[0] = x & 0x7fff
+    inputs[1] = (x >> 16) & 0x7fff
+    inputs[2] = (x >> 32) & 0x7fff
+    inputs[3] = y & 0x7fff
+    inputs[4] = (y >> 16) & 0x7fff
+    inputs[5] = (y >> 32) & 0x7fff
+}
+
+def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
+    
+    var x1 = inputs[0]
+    var y1 = inputs[1]
+    var x2 = inputs[2]
+    var y2 = inputs[3]
+    var x3 = inputs[4]
+    var y3 = inputs[5]
+
+    var minx = x1
+    if minx > x2 {
+        minx = x2
+    }
+    if minx > x3 {
+        minx = x3
+    }
+
+    var maxx = x1
+    if maxx < x2 {
+        maxx = x2
+    }
+    if maxx < x3 {
+        maxx = x3
+    }
+
+    var miny = y1
+    if miny > y2 {
+        miny = y2
+    }
+    if miny > y3 {
+        miny = y3
+    }
+
+    var maxy = y1
+    if maxy < y2 {
+        maxy = y2
+    }
+    if maxy < y3 {
+        maxy = y3
+    }
+
+    var providedminx = outputs[0]
+    var providedmaxx = outputs[1]
+    var providedminy = outputs[2]
+    var providedmaxy = outputs[3]
+
+    if providedminx == minx && providedmaxx == maxx && providedminy == miny && providedmaxy == maxy {
+        if tick == 0xffff {
+            return win
+        }
+    } else {
+        set_error(`Expected ({providedminx}, {providedmaxx}, {providedminy}, {providedmaxy}), but got ({minx}, {maxx}, {miny}, {maxy})`)
+        return fail
+    }
+}

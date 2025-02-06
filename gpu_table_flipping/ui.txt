@@ -1,0 +1,43 @@
+[text id="a00" text="0.0000" size=10 x=-500 y=70 font=mono]
+[text id="a10" text="0.0000" size=10 x=-500 y=90 font=mono]
+[text id="a20" text="0.0000" size=10 x=-500 y=110 font=mono]
+[text id="a30" text="0.0000" size=10 x=-500 y=130 font=mono]
+
+[text id="a01" text="0.0000" size=10 x=-375 y=70 font=mono]
+[text id="a11" text="0.0000" size=10 x=-375 y=90 font=mono]
+[text id="a21" text="0.0000" size=10 x=-375 y=110 font=mono]
+[text id="a31" text="0.0000" size=10 x=-375 y=130 font=mono]
+
+[text id="a02" text="0.0000" size=10 x=-250 y=70 font=mono]
+[text id="a12" text="0.0000" size=10 x=-250 y=90 font=mono]
+[text id="a22" text="0.0000" size=10 x=-250 y=110 font=mono]
+[text id="a32" text="0.0000" size=10 x=-250 y=130 font=mono]
+
+[text id="a03" text="0.0000" size=10 x=-125 y=70 font=mono]
+[text id="a13" text="0.0000" size=10 x=-125 y=90 font=mono]
+[text id="a23" text="0.0000" size=10 x=-125 y=110 font=mono]
+[text id="a33" text="0.0000" size=10 x=-125 y=130 font=mono]
+
+[text id="t" text="T" size=10 x=-50 y=50 font=mono]
+
+[text id="eq" text="=" size=10 x=0 y=100 font=mono]
+
+[text id="m00" text="0.0000" size=10 x=125 y=70 font=mono]
+[text id="m10" text="0.0000" size=10 x=125 y=90 font=mono]
+[text id="m20" text="0.0000" size=10 x=125 y=110 font=mono]
+[text id="m30" text="0.0000" size=10 x=125 y=130 font=mono]
+
+[text id="m01" text="0.0000" size=10 x=250 y=70 font=mono]
+[text id="m11" text="0.0000" size=10 x=250 y=90 font=mono]
+[text id="m21" text="0.0000" size=10 x=250 y=110 font=mono]
+[text id="m31" text="0.0000" size=10 x=250 y=130 font=mono]
+
+[text id="m02" text="0.0000" size=10 x=375 y=70 font=mono]
+[text id="m12" text="0.0000" size=10 x=375 y=90 font=mono]
+[text id="m22" text="0.0000" size=10 x=375 y=110 font=mono]
+[text id="m32" text="0.0000" size=10 x=375 y=130 font=mono]
+
+[text id="m03" text="0.0000" size=10 x=500 y=70 font=mono]
+[text id="m13" text="0.0000" size=10 x=500 y=90 font=mono]
+[text id="m23" text="0.0000" size=10 x=500 y=110 font=mono]
+[text id="m33" text="0.0000" size=10 x=500 y=130 font=mono]

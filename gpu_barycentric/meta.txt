@@ -1,0 +1,30 @@
+kind = combinational
+title = "Barely-Centric Coordination"
+size = [-64, -64, 63, 63]
+background = 5
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+input_labels = [["A"], ["B"], ["C"], ["P"], ["DOUBLE AREA"]]
+output_labels = ["a", "b", "c", "IN TRIANGLE"]
+save_solution_as_custom = "Hoodoo/Rasterizer/Barycentrics"
+dialogue = [
+  (alien_centered, "Now is the fun part.
+After all the matrix magic we will get a 2D triangle that we need to draw on the screen.
+To do that, we need to be able to check whether a pixel belongs inside the triangle or not."),
+  (info, "Just like any color can be described as a combination of Red, Green and Blue, each point inside a triangle can be described as a combination of corner points A, B, C of the triangle.
+In formula form:
+[center]P = a * A + b * B + c * C[/center]
+The parameters (a, b, c) are called [color=#ff9800]Barycentric Coordinates[/color].
+For some intuition, when the point P is on any of the corners the coordinate for this point will be 1, while the other two will be 0.
+If any of the coordinates is negative, that means the point is outside the triangle."),
+  (info, "Barycentric coordinates can be calculated using the following formulas:
+[table=3]
+[cell]a[/cell] [cell]=[/cell] [cell]SArea(P, B, C)/SArea(A, B, C)[/cell]
+[cell]b[/cell] [cell]=[/cell] [cell]SArea(A, P, C)/SArea(A, B, C)[/cell]
+[cell]c[/cell] [cell]=[/cell] [cell]1.0 - a - b[/cell]
+[cell]inTriangle[/cell] [cell]=[/cell] [cell]a >= 0 AND b >= 0 AND c >= 0[/cell]
+[/table]
+Where SArea is the double-area operation you've done before."),
+  (info, "Given the three 2D points of a triangle, its double-area (SArea(A, B, C)) and a point P, calculate the barycentric coordinates (a, b, c), and output them.
+You should also return whether the point is inside a triangle or not.
+You will not get a triangle with zero area.")
+]
