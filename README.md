@@ -2,9 +2,15 @@
 
 This is the repository containing levels of the custom campaign for the game [Turing Complete](https://store.steampowered.com/app/1444480/Turing_Complete/).
 
-## How to play
+## Installation Instructions
 
-There are three ways to play the campaign:
+First of all, you need to download the campaign:
+1. Download one of the releases on the right side
+2. Unpack the contents (You should get a bunch of folders starting with `gpu_`)
+3. Move the folders into the level directory in your Turing Complete game files
+4. Start the game
+
+Then you have three ways to play the campaign:
 1. In the main menu, press `Q` and in the console type `load gpu_campaign`, and press `Enter`.
 That will load the campaign screen.
 Unfortunately with this approach you have to load the campaign screen again after completing each level.
