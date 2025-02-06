@@ -22,10 +22,13 @@ jobs:
       - name: Download repository
         uses: actions/checkout@v4
 
+      - name: Zip release
+        run: zip -r Campaign.zip gpu_*
+
       - name: Upload To Github Release
         uses: softprops/action-gh-release@v2
         with:
-          files: "gpu_*/*.*"
+          files: "Campaign.zip"
           name: ${{github.event.inputs.name}}
           tag_name: ${{github.event.inputs.tag}}
           body: ${{github.event.inputs.description}}
