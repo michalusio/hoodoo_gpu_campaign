@@ -17,3 +17,7 @@ gpu_*/.DS_Store
 # Readme images
 !images/
 !images/*
+
+# Github stuff
+!.github/
+!.github/*
