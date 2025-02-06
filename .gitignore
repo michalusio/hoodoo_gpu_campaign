@@ -13,3 +13,7 @@
 
 # I hate Mac
 gpu_*/.DS_Store
+
+# Readme images
+!images/
+!images/*
