@@ -4,6 +4,7 @@
 # But not these files
 !.gitignore
 !fixed.si
+!README.md
 
 # Have to first unignore the directory itself
 !gpu_*/
