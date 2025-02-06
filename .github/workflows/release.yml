@@ -1,0 +1,24 @@
+name: Release new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Release name'     
+        required: true
+        default: ''
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Upload To Github Release
+        uses: xresloader/upload-to-github-release@v1.6.0
+        with:
+          file: "gpu_*/*.*"
+          draft: false
+          prerelease: false
+          branches: "main"
+          default_release_name: github.event.inputs.name
