@@ -23,5 +23,6 @@ jobs:
         with:
           files: "gpu_*/*.*"
           name: ${{github.event.inputs.name}}
+          tag_name: ${{github.event.inputs.name}}
           body: ${{github.event.inputs.description}}
           make_latest: true
