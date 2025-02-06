@@ -2,6 +2,12 @@
 
 This is the repository containing levels of the custom campaign for the game [Turing Complete](https://store.steampowered.com/app/1444480/Turing_Complete/).
 
+## Features
+
+- Introduction to signed fixed-point numbers
+- Explaining the basics of rasterization, including color interpolation and barycentric coordinates
+- Build a GPU capable of rendering 3D models
+
 ## Installation Instructions
 
 First of all, you need to download the campaign:
@@ -21,12 +27,6 @@ That makes it much easier to open the campaign each time you complete a level.
 3. Using `dev_mode` you can add all the levels of the campaign to the main campaign screen.
 This approach is the most work, but after completing a level you are moved back directly to the campaign.
 
-## Features
-
-- Introduction to signed fixed-point numbers
-- Explaining the basics of rasterization, including color interpolation and barycentric coordinates
-- Build a GPU capable of rendering 3D models
-
 ## Preview
 
 ![](images/1.png)
@@ -37,19 +37,28 @@ This approach is the most work, but after completing a level you are moved back 
 
 ## Roadmap
 
-* To finish V1:
-    * Setting up the MVP matrix and projecting vertices
-    * Decoding five simple commands (draw, get_status, change_ram_offset, change_triangle_count, change_mvp)
-    * Getting the rasterizer and vertex transformer together into `Hoodoo V1`
-* For V2:
-    * Half-pixel correction
-    * Alpha composition
-    * Backface culling
-    * Hardware dithering
-    * Double buffering
-    * Z-buffer
-    * More rasterizers in parallel
-    * Fully programmable pipeline
+Legend:  
+:heavy_check_mark: - Done  
+:hammer: - In Progress  
+:o: - Not Done Yet  
+:x: - Probably won't be supported
+
+- V1:
+    - :heavy_check_mark: Fixed-point numbers introduction
+    - :heavy_check_mark: Basics of triangle processing - interpolation, barycentric coordinates
+    - :heavy_check_mark: Vector and Matrix operations
+    - :hammer: Setting up the MVP matrix and projecting vertices
+    - :hammer: Decoding five simple commands (draw, get_status, change_ram_offset, change_triangle_count, change_mvp)
+    - :hammer: Getting the rasterizer and vertex transformer together into `Hoodoo V1`
+- V2:
+    - :o: Half-pixel correction
+    - :o: Alpha composition
+    - :o: Backface culling
+    - :o: Hardware dithering
+    - :o: Double buffering
+    - :o: Z-buffer
+    - :o: More rasterizers in parallel
+    - :o: Fully programmable pipeline
 
 ## Contributing
 
