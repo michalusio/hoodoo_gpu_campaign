@@ -3,6 +3,10 @@ name: Release new version
 on:
   workflow_dispatch:
     inputs:
+      tag:
+        description: 'Release tag'     
+        required: true
+        default: 'v*.*.*'
       name:
         description: 'Release name'     
         required: true
@@ -23,6 +27,6 @@ jobs:
         with:
           files: "gpu_*/*.*"
           name: ${{github.event.inputs.name}}
-          tag_name: ${{github.event.inputs.name}}
+          tag_name: ${{github.event.inputs.tag}}
           body: ${{github.event.inputs.description}}
           make_latest: true
