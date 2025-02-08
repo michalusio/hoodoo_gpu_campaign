@@ -18,5 +18,8 @@ The digits to the right of the point are treated like inverses of powers of two.
  (info, "Create a circuit that will multiply two 32-bit fixed-point numbers.
 Assume the point is after the sixteenth binary digit, in the middle.
 If the result overflows, return the maximum positive value (32767.9999847412109375).
-If the result underflows, return the maximum negative value (-32768.0).")
+If the result underflows, return the maximum negative value (-32768.0).
+
+Note: There are many possible ways to round the result of multiplication.
+The level assumes you will use Rounding Towards Zero.")
 ]

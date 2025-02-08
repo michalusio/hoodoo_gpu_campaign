@@ -265,6 +265,9 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         $builder.place_fixed(<Fixed>expected)
         $builder.place_string(", but got ")
         $builder.place_fixed(<Fixed>provided)
+        if ((expected + 1) == provided) || ((expected - 1) == provided) {
+            $builder.place_string("\nThe value you have provided is one off from the expected - maybe you're rounding incorrectly?")
+        }
         set_error(str(builder))
         return fail
     }
