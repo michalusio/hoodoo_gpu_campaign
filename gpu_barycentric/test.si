@@ -426,15 +426,15 @@ def get_expected(inputs: [Int]) Vector {
     let p = <Vector> ([inputs[3], <Int>0])
 
     let totalArea = <Fixed>inputs[4]
-    let signArea = <S32>totalArea < 0
 
     let sx = sarea(p, b, c)
     let sy = sarea(a, p, c)
+    let sz = sarea(a, b, p)
     let x = sx / totalArea
     let y = sy / totalArea
-    let z = ((<Fixed>65536) - x) - y
+    let z = sz / totalArea
 
-    let inside = !((((<S32>sx) < 0) != signArea) || (((<S32>sy) < 0) != signArea) || (((<S32>z) < 0) != signArea))
+    let inside = ((<S32>x) >= 0) && ((<S32>y) >= 0) && ((<S32>z) >= 0)
 
     return pack(x, y, z, <Fixed>(<U32>(<U1>inside)))
 }

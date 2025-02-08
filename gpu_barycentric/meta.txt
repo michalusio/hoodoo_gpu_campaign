@@ -20,7 +20,7 @@ If any of the coordinates is negative, that means the point is outside the trian
 [table=3]
 [cell]a[/cell] [cell]=[/cell] [cell]SArea(P, B, C)/SArea(A, B, C)[/cell]
 [cell]b[/cell] [cell]=[/cell] [cell]SArea(A, P, C)/SArea(A, B, C)[/cell]
-[cell]c[/cell] [cell]=[/cell] [cell]1.0 - a - b[/cell]
+[cell]c[/cell] [cell]=[/cell] [cell]SArea(A, B, P)/SArea(A, B, C)[/cell]
 [cell]inTriangle[/cell] [cell]=[/cell] [cell]a >= 0 AND b >= 0 AND c >= 0[/cell]
 [/table]
 Where SArea is the double-area operation you've done before."),
