@@ -13,29 +13,61 @@ def get_expected(a: S32, b: S32) S32 {
     return <S32> sum
 }
 
+def save($inputs: [Int], a: S32, b: S32, e: S32) {
+    inputs[0] = <Int> a
+    inputs[1] = <Int> b
+    inputs[2] = <Int> e
+
+    ui_set_text("formula", `{a} + {b} = {e}`)
+}
+
 def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
 
-    var x = tick
-    x ^= x << 23
-    x ^= x >> 25
-    x ^= x << 7
-    x ^= x >> 9
-    x ^= x << 15
-    x ^= x >> 17
-    x ^= x << 53
-    x ^= x >> 55
-    x ^= x << 37
-    x ^= x >> 39
-    x ^= x << 45
-    x ^= x >> 47
+    if tick == 0x10000 {
+        var a = <S32>0
+        var b = <S32>0
+        var expected = <S32>0
+        save($inputs, a, b, expected)
+    } elif tick == 0x10001 {
+        var a = <S32>(<U32>0x7fffffff)
+        var b = <S32>1
+        var expected = <S32>(<U32>0x7fffffff)
+        save($inputs, a, b, expected)
+    } elif tick == 0x10002 {
+        var a = <S32>(<U32>0x80000000)
+        var b = <S32>(<U32>0xffffffff)
+        var expected = <S32>(<U32>0x80000000)
+        save($inputs, a, b, expected)
+    } elif tick == 0x10003 {
+        var a = <S32>(<U32>0x499602D2)
+        var b = <S32>(<U32>0x3669FD2D)
+        var expected = <S32>(<U32>0x7FFFFFFF)
+        save($inputs, a, b, expected)
+    } elif tick == 0x10004 {
+        var a = <S32>(<U32>0xC99602D2)
+        var b = <S32>(<U32>0xB669FD2D)
+        var expected = <S32>(<U32>0x80000000)
+        save($inputs, a, b, expected)
+    } else {
+        var x = tick
+        x ^= x << 23
+        x ^= x >> 25
+        x ^= x << 7
+        x ^= x >> 9
+        x ^= x << 15
+        x ^= x >> 17
+        x ^= x << 53
+        x ^= x >> 55
+        x ^= x << 37
+        x ^= x >> 39
+        x ^= x << 45
+        x ^= x >> 47
 
-    inputs[0] = x & 0xffffffff
-    inputs[1] = (x >> 32) & 0xffffffff
-
-    let a = <S32> inputs[0]
-    let b = <S32> inputs[1]
-
-    ui_set_text("formula", `{a} + {b} = {get_expected(a, b)}`)
+        var a = <S32>(x & 0xffffffff)
+        var b = <S32>((x >> 32) & 0xffffffff)
+        var expected = get_expected(a, b)
+        save($inputs, a, b, expected)
+    }
 }
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
@@ -43,13 +75,14 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
     let a = <S32> inputs[0]
     let b = <S32> inputs[1]
 
-    let expected = get_expected(a, b)
+    let expected = <S32> inputs[2]
     let provided = <S32> outputs[0]
 
     if provided == expected {
-        if tick == 0xffff {
+        if tick == 0x10004 {
             return win
         }
+        return pass
     } else {
         set_error(`Expected {expected}, but got {provided}`)
         return fail
