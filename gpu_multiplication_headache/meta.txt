@@ -11,8 +11,7 @@ dialogue = [
   (alien_centered, "There are many ways to multiply matrices, and many algorithms. For now, we will use an algorithm that uses the fact that we represent a matrix by four column vectors"),
   (info, "To multiply matrix A by matrix B, you should:
 1. Transpose matrix A
-2. Calculate the dot product for each pair of vectors between A and B
-3. Gather dot products for each B column and pack them into a vector
+2. Multiply each transposed vector of A with each vector of B
 4. Four of those vectors make the multiplied matrix
 
 The algorithm can also be written as a formula:

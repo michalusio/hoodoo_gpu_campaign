@@ -473,11 +473,13 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
     inputs[9] = <Int>v0zw
 
     if tick < 32 {
-        let a = pack(
+        var a = pack(
             combine(a0xy, a0zw),
             combine(a1xy, a1zw),
             combine(a2xy, a2zw),
             combine(a3xy, a3zw))
+        a = a.transpose()
+
         let v = combine(v0xy, v0zw)
         let w = a * v
 
@@ -504,11 +506,13 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
     
-    let a = pack(
+    var a = pack(
         combine(<U64>inputs[0], <U64>inputs[1]),
         combine(<U64>inputs[2], <U64>inputs[3]),
         combine(<U64>inputs[4], <U64>inputs[5]),
         combine(<U64>inputs[6], <U64>inputs[7]))
+    a = a.transpose()
+
     let v = combine(<U64>inputs[8], <U64>inputs[9])
     let w = a * v
 
@@ -518,6 +522,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         if tick == 0xffff {
             return win
         }
+        return pass
     } else {
         set_error(`Expected [{w.x()}, {w.y()}, {w.z()}, {w.w()}], but got [{pw.x()}, {pw.y()}, {pw.z()}, {pw.w()}]`)
         return fail
