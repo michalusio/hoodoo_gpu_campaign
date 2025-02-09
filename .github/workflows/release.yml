@@ -18,12 +18,17 @@ jobs:
       - name: Prune and get tags
         run: git fetch --prune --unshallow --tags
 
-      - name: Create changelogs
-        id: changelogs
-        uses: heineiuo/create-changelogs@v0.2.8
+      - name: Create changelog file
+        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline | sed -e 's/^/\* /' > CHANGELOG.md
+
+      - name: Read changelog file
+        id: changelog
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: CHANGELOG.md
 
       - name: Zip release
-        run: zip -r Campaign.zip gpu_*
+        run: zip -r Campaign.zip gpu_* CHANGELOG.md
 
       - name: Upload To Github Release
         uses: softprops/action-gh-release@v2
@@ -31,5 +36,5 @@ jobs:
           files: "Campaign.zip"
           name: ${{github.event.inputs.tag}}
           tag_name: ${{github.event.inputs.tag}}
-          body: ${{ steps.changelogs.outputs.changelogs }}
+          body: ${{steps.changelog.outputs.content}}
           make_latest: true
