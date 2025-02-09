@@ -15,19 +15,23 @@ jobs:
         run: git fetch --prune --unshallow --tags
 
       - name: Create changelog file
-        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 > .changelog
+        run: echo "###Issues:\n" >> CHANGELOG.md
 
       - name: Get milestone issues
         id: issues
-        uses: quotidian-ennui/find-matching-issues@v0.1.0
+        uses: quotidian-ennui/find-matching-issues@v0.1.2
         with:
           query: milestone:${{github.event.milestone.title}}
+          format: list
 
-      - name: Concatenate issues with commits
-        uses: ftnext/action-concatenate-files@v1.0.1
-        with:
-          sources: ${{steps.issues.outputs.path}} .changelog
-          destination: CHANGELOG.md
+      - name: Append issues to changelog file
+        run: cat ${{steps.issues.outputs.path}} >> CHANGELOG.md
+
+      - name: Append commits header
+        run: echo "###Commits:\n" >> CHANGELOG.md
+
+      - name: Append commits to changelog file
+        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 >> CHANGELOG.md
 
       - name: Read changelog file
         id: changelog
