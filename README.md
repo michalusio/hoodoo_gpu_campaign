@@ -2,6 +2,8 @@
 
 This is the repository containing levels of the custom campaign for the game [Turing Complete](https://store.steampowered.com/app/1444480/Turing_Complete/).
 
+**This campaign is usable only on the SAVE_BREAKER/alpha branch of the game**
+
 ## Features
 
 - Introduction to signed fixed-point numbers
