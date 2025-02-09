@@ -1,12 +1,8 @@
 name: Release new version
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag'     
-        required: true
-        default: 'v*.*.*'
+  milestone:
+    types: [closed]
 
 jobs:
   pack:
@@ -21,6 +17,18 @@ jobs:
       - name: Create changelog file
         run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 > CHANGELOG.md
 
+      - name: Get milestone issues
+        id: issues
+        uses: quotidian-ennui/find-matching-issues@v0.1.0
+        with:
+          query: milestone:${{github.event.milestone.title}}
+
+      - name: Concatenate issues with commits
+        uses: ftnext/action-concatenate-files@v1.0.1
+        with:
+          sources: ${{steps.issues.outputs.path}} CHANGELOG.md
+          destination: CHANGELOG.md
+
       - name: Read changelog file
         id: changelog
         uses: juliangruber/read-file-action@v1
@@ -34,7 +42,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: "Campaign.zip"
-          name: ${{github.event.inputs.tag}}
-          tag_name: ${{github.event.inputs.tag}}
+          name: ${{github.event.milestone.title}}
+          tag_name: ${{github.event.milestone.title}}
           body: ${{steps.changelog.outputs.content}}
           make_latest: true
