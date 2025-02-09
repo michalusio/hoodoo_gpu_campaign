@@ -104,18 +104,20 @@ dot place_fixed($buffer: StringBuilder, value: Fixed) {
     dbuffer[0] += 18
 }
 
-dot place_hex($buffer: StringBuilder, value: U24) {
+dot place_hex($buffer: StringBuilder, value: U32) {
     let dbuffer = <[U16]>buffer
     let index = dbuffer[0]
     let casted = <[U8]>buffer
     casted[index + 2] = C_HASH
-    casted[index + 3] = hex_digit(<U8>((value >> 4) & 0xf))
-    casted[index + 4] = hex_digit(<U8>((value) & 0xf))
-    casted[index + 5] = hex_digit(<U8>((value >> 12) & 0xf))
-    casted[index + 6] = hex_digit(<U8>((value >> 8) & 0xf))
-    casted[index + 7] = hex_digit(<U8>((value >> 20) & 0xf))
-    casted[index + 8] = hex_digit(<U8>((value >> 16) & 0xf))
-    dbuffer[0] += 7
+    casted[index + 3] = hex_digit(<U8>((value >> 28) & 0xf))
+    casted[index + 4] = hex_digit(<U8>((value >> 24) & 0xf))
+    casted[index + 5] = hex_digit(<U8>((value >> 20) & 0xf))
+    casted[index + 6] = hex_digit(<U8>((value >> 16) & 0xf))
+    casted[index + 7] = hex_digit(<U8>((value >> 12) & 0xf))
+    casted[index + 8] = hex_digit(<U8>((value >> 8) & 0xf))
+    casted[index + 9] = hex_digit(<U8>((value >> 4) & 0xf))
+    casted[index + 10] = hex_digit(<U8>((value >> 0) & 0xf))
+    dbuffer[0] += 9
 }
 
 def hex_digit(value: U8) U8 {
@@ -212,6 +214,18 @@ def save($inputs: [Int], a: U32, b: U32, e: U32) {
     $builder.place_char(C_SPACE)
     $builder.place_fixed(<Fixed>e)
     ui_set_text("formula", str(builder))
+
+    let hexbuilder = string_builder()
+    $hexbuilder.place_hex(a)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_char(C_SLASH)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_hex(b)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_char(C_EQUAL)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_hex(e)
+    ui_set_text("formula_hex", str(hexbuilder))
 }
 
 def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {

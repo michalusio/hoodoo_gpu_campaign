@@ -1,1 +1,2 @@
-[text id="formula" text="... / ... = ..." size=24 y=90 font=mono]
+[text id="formula" text="... / ... = ..." size=24 y=85 font=mono]
+[text id="formula_hex" text="... / ... = ..." size=24 y=115 font=mono]

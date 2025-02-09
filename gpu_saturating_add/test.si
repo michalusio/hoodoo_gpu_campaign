@@ -1,3 +1,79 @@
+const C_ZERO = <U8>48
+const C_DOT = <U8>46
+const C_DASH = <U8>45
+const C_SPACE = <U8>32
+const C_HASH = <U8>35
+const C_SLASH = <U8>47
+const C_PLUS = <U8>43
+const C_EQUAL = <U8>61
+const C_STAR = <U8>42
+
+type StringBuilder [U8]
+
+def string_builder() StringBuilder {
+    let arr = array(2050, <U8> 0)
+    return <StringBuilder> arr
+}
+
+def str(buffer: StringBuilder) String {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let arr = array(<Int>index, <U8> 0)
+    var i = <U16>0
+    while i < index {
+        arr[i] = <U8>(casted[i + 2])
+        i += 1
+    }
+    return <String>arr
+}
+
+dot place_string($buffer: StringBuilder, value: String) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    let len = <U16>(value.len())
+    var i = <U16>0
+    while i < len {
+        casted[index + i + 2] = <U8>(value[i])
+        i += 1
+    }
+    dbuffer[0] += len
+}
+
+dot place_char($buffer: StringBuilder, value: U8) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = value
+    dbuffer[0] += 1
+}
+
+dot place_hex($buffer: StringBuilder, value: U32) {
+    let dbuffer = <[U16]>buffer
+    let index = dbuffer[0]
+    let casted = <[U8]>buffer
+    casted[index + 2] = C_HASH
+    casted[index + 3] = hex_digit(<U8>((value >> 28) & 0xf))
+    casted[index + 4] = hex_digit(<U8>((value >> 24) & 0xf))
+    casted[index + 5] = hex_digit(<U8>((value >> 20) & 0xf))
+    casted[index + 6] = hex_digit(<U8>((value >> 16) & 0xf))
+    casted[index + 7] = hex_digit(<U8>((value >> 12) & 0xf))
+    casted[index + 8] = hex_digit(<U8>((value >> 8) & 0xf))
+    casted[index + 9] = hex_digit(<U8>((value >> 4) & 0xf))
+    casted[index + 10] = hex_digit(<U8>((value >> 0) & 0xf))
+    dbuffer[0] += 9
+}
+
+def hex_digit(value: U8) U8 {
+    if value <= 0x9 {
+        return value + C_ZERO
+    }
+    if value <= 0xf {
+        return value + C_ZERO + 7
+    }
+    return C_ZERO
+}
 
 def get_expected(a: S32, b: S32) S32 {
     let avalue = <Int> a
@@ -18,7 +94,29 @@ def save($inputs: [Int], a: S32, b: S32, e: S32) {
     inputs[1] = <Int> b
     inputs[2] = <Int> e
 
-    ui_set_text("formula", `{a} + {b} = {e}`)
+    let builder = string_builder()
+    $builder.place_string(str(a))
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_PLUS)
+    $builder.place_char(C_SPACE)
+    $builder.place_string(str(b))
+    $builder.place_char(C_SPACE)
+    $builder.place_char(C_EQUAL)
+    $builder.place_char(C_SPACE)
+    $builder.place_string(str(e))
+    ui_set_text("formula", str(builder))
+
+    let hexbuilder = string_builder()
+    $hexbuilder.place_hex(<U32>a)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_char(C_PLUS)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_hex(<U32>b)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_char(C_EQUAL)
+    $hexbuilder.place_char(C_SPACE)
+    $hexbuilder.place_hex(<U32>e)
+    ui_set_text("formula_hex", str(hexbuilder))
 }
 
 def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
