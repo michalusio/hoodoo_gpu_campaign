@@ -39,11 +39,11 @@ name = "Hoodoo"
 [instructions]
 
 point %a(immediate), %b(immediate)
-%a[7:0] %a[15:8] %b[7:0] %b[15:8]
+%b[15:8] %b[7:0] %a[15:8] %a[7:0]
 A 2D point.
 
 color %r(immediate), %g(immediate), %b(immediate)
-bbbbbbbb gggggggg rrrrrrrr
+rrrrrrrr gggggggg bbbbbbbb
 A color.
 
 `
