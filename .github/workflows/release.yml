@@ -7,20 +7,20 @@ on:
         description: 'Release tag'     
         required: true
         default: 'v*.*.*'
-      name:
-        description: 'Release name'     
-        required: true
-        default: ''
-      description:
-        description: 'Release description'     
-        required: false
-        default: ''
+
 jobs:
   pack:
     runs-on: ubuntu-latest
     steps:
       - name: Download repository
         uses: actions/checkout@v4
+
+      - name: Prune and get tags
+        run: git fetch --prune --unshallow --tags
+
+      - name: Create changelogs
+        id: changelogs
+        uses: heineiuo/create-changelogs@v0.2.8
 
       - name: Zip release
         run: zip -r Campaign.zip gpu_*
@@ -29,7 +29,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: "Campaign.zip"
-          name: ${{github.event.inputs.name}}
+          name: ${{github.event.inputs.tag}}
           tag_name: ${{github.event.inputs.tag}}
-          body: ${{github.event.inputs.description}}
+          body: ${{ steps.changelogs.outputs.changelogs }}
           make_latest: true
