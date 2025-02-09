@@ -15,7 +15,7 @@ jobs:
         run: git fetch --prune --unshallow --tags
 
       - name: Create changelog file
-        run: echo "###Issues:\n" >> CHANGELOG.md
+        run: echo "### Issues:" >> CHANGELOG.md
 
       - name: Get milestone issues
         id: issues
@@ -28,7 +28,7 @@ jobs:
         run: cat ${{steps.issues.outputs.path}} >> CHANGELOG.md
 
       - name: Append commits header
-        run: echo "###Commits:\n" >> CHANGELOG.md
+        run: echo "### Commits:" >> CHANGELOG.md
 
       - name: Append commits to changelog file
         run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 >> CHANGELOG.md
