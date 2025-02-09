@@ -15,7 +15,7 @@ jobs:
         run: git fetch --prune --unshallow --tags
 
       - name: Create changelog file
-        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 > CHANGELOG.md
+        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 > .changelog
 
       - name: Get milestone issues
         id: issues
@@ -26,7 +26,7 @@ jobs:
       - name: Concatenate issues with commits
         uses: ftnext/action-concatenate-files@v1.0.1
         with:
-          sources: ${{steps.issues.outputs.path}} CHANGELOG.md
+          sources: ${{steps.issues.outputs.path}} .changelog
           destination: CHANGELOG.md
 
       - name: Read changelog file
