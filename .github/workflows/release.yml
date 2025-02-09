@@ -19,7 +19,7 @@ jobs:
         run: git fetch --prune --unshallow --tags
 
       - name: Create changelog file
-        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -u -s 9 > CHANGELOG.md
+        run: git log $(git describe --tags --abbrev=0)..HEAD --oneline --no-merges | sed -e 's/^/\* /' | uniq -s 9 > CHANGELOG.md
 
       - name: Read changelog file
         id: changelog
