@@ -576,7 +576,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
             return win
         }
     } else {
-        set_error(`Expected [{str(<Fixed>(<U32>expectedOne))}, {str(<Fixed>(<U32>(expectedOne >> 32)))}, {str(<Fixed>(<U32>expectedTwo))}, {str(<Fixed>(<U32>(expectedTwo >> 32)))}]\n but got [{str(<Fixed>(<U32>providedOne))}, {str(<Fixed>(<U32>(providedOne >> 32)))}, {str(<Fixed>(<U32>providedTwo))}, {str(<Fixed>(<U32>(providedTwo >> 32)))}]`)
+        set_error(`Expected:\n[{str(<Fixed>(<U32>expectedOne))}, {str(<Fixed>(<U32>(expectedOne >> 32)))}, {str(<Fixed>(<U32>expectedTwo))}, {str(<Fixed>(<U32>(expectedTwo >> 32)))}]\nBut got:\n[{str(<Fixed>(<U32>providedOne))}, {str(<Fixed>(<U32>(providedOne >> 32)))}, {str(<Fixed>(<U32>providedTwo))}, {str(<Fixed>(<U32>(providedTwo >> 32)))}]`)
         return fail
     }
 }

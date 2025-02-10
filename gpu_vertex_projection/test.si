@@ -639,7 +639,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
             return win
         }
     } else {
-        set_error(`Expected [{w.x()}, {w.y()}, {w.z()}, {w.w()}], but got [{pw.x()}, {pw.y()}, {pw.z()}, {pw.w()}]`)
+        set_error(`Expected:\n[{w.x()}, {w.y()}, {w.z()}, {w.w()}]\nBut got:\n[{pw.x()}, {pw.y()}, {pw.z()}, {pw.w()}]`)
         return fail
     }
 }

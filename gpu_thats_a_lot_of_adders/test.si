@@ -160,13 +160,8 @@ def str(value: Fixed) String {
     let d8 = <U8>((absresult / 10000000) % 10)
     let d9 = <U8>((absresult / 1000000) % 10)
     let d10= <U8>((absresult / 100000) % 10)
-    let d11= <U8>((absresult / 10000) % 10)
-    let d12= <U8>((absresult / 1000) % 10)
-    let d13= <U8>((absresult / 100) % 10)
-    let d14= <U8>((absresult / 10) % 10)
-    let d15= <U8>(absresult % 10)
     
-    let str = array(18, <U8>0)
+    let str = array(13, <U8>0)
     str[0] = (result < 0) ? C_DASH : C_SPACE
     str[1] = d0 + C_ZERO
     str[2] = d1 + C_ZERO
@@ -180,11 +175,6 @@ def str(value: Fixed) String {
     str[10] = d8 + C_ZERO
     str[11] = d9 + C_ZERO
     str[12] = d10 + C_ZERO
-    str[13] = d11 + C_ZERO
-    str[14] = d12 + C_ZERO
-    str[15] = d13 + C_ZERO
-    str[16] = d14 + C_ZERO
-    str[17] = d15 + C_ZERO
     return <String>str
 }
 
@@ -560,7 +550,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
             return win
         }
     } else {
-        set_error(`         [{m.c1().x()}, {m.c2().x()}, {m.c3().x()}, {m.c4().x()}],         [{pm0.x()}, {pm1.x()}, {pm2.x()}, {pm3.x()}]\nExpected [{m.c1().y()}, {m.c2().y()}, {m.c3().y()}, {m.c4().y()}], but got [{pm0.y()}, {pm1.y()}, {pm2.y()}, {pm3.y()}]\n         [{m.c1().z()}, {m.c2().z()}, {m.c3().z()}, {m.c4().z()}],         [{pm0.z()}, {pm1.z()}, {pm2.z()}, {pm3.z()}]\n         [{m.c1().w()}, {m.c2().w()}, {m.c3().w()}, {m.c4().w()}],         [{pm0.w()}, {pm1.w()}, {pm2.w()}, {pm3.w()}]`)
+        set_error(`Expected the matrix on the left, but received one on the right:\n[{m.c1().x()}, {m.c2().x()}, {m.c3().x()}, {m.c4().x()}]   [{pm0.x()}, {pm1.x()}, {pm2.x()}, {pm3.x()}]\n[{m.c1().y()}, {m.c2().y()}, {m.c3().y()}, {m.c4().y()}]   [{pm0.y()}, {pm1.y()}, {pm2.y()}, {pm3.y()}]\n[{m.c1().z()}, {m.c2().z()}, {m.c3().z()}, {m.c4().z()}]   [{pm0.z()}, {pm1.z()}, {pm2.z()}, {pm3.z()}]\n[{m.c1().w()}, {m.c2().w()}, {m.c3().w()}, {m.c4().w()}]   [{pm0.w()}, {pm1.w()}, {pm2.w()}, {pm3.w()}]`)
         return fail
     }
 }

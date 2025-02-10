@@ -566,7 +566,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
             return win
         }
     } else {
-        set_error(`         [{m.c1().x()}, {m.c2().x()}, {m.c3().x()}, {m.c4().x()}],         [{pm0.x()}, {pm1.x()}, {pm2.x()}, {pm3.x()}]\nExpected [{m.c1().y()}, {m.c2().y()}, {m.c3().y()}, {m.c4().y()}], but got [{pm0.y()}, {pm1.y()}, {pm2.y()}, {pm3.y()}]\n         [{m.c1().z()}, {m.c2().z()}, {m.c3().z()}, {m.c4().z()}],         [{pm0.z()}, {pm1.z()}, {pm2.z()}, {pm3.z()}]\n         [{m.c1().w()}, {m.c2().w()}, {m.c3().w()}, {m.c4().w()}],         [{pm0.w()}, {pm1.w()}, {pm2.w()}, {pm3.w()}]`)
+        set_error(`Expected the matrix on the left, but received one on the right:\n[{m.c1().x()}, {m.c2().x()}, {m.c3().x()}, {m.c4().x()}]   [{pm0.x()}, {pm1.x()}, {pm2.x()}, {pm3.x()}]\n[{m.c1().y()}, {m.c2().y()}, {m.c3().y()}, {m.c4().y()}]   [{pm0.y()}, {pm1.y()}, {pm2.y()}, {pm3.y()}]\n[{m.c1().z()}, {m.c2().z()}, {m.c3().z()}, {m.c4().z()}]   [{pm0.z()}, {pm1.z()}, {pm2.z()}, {pm3.z()}]\n[{m.c1().w()}, {m.c2().w()}, {m.c3().w()}, {m.c4().w()}]   [{pm0.w()}, {pm1.w()}, {pm2.w()}, {pm3.w()}]`)
         return fail
     }
 }

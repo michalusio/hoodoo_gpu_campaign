@@ -159,13 +159,8 @@ def str(value: Fixed) String {
     let d8 = <U8>((absresult / 10000000) % 10)
     let d9 = <U8>((absresult / 1000000) % 10)
     let d10= <U8>((absresult / 100000) % 10)
-    let d11= <U8>((absresult / 10000) % 10)
-    let d12= <U8>((absresult / 1000) % 10)
-    let d13= <U8>((absresult / 100) % 10)
-    let d14= <U8>((absresult / 10) % 10)
-    let d15= <U8>(absresult % 10)
     
-    let str = array(18, <U8>0)
+    let str = array(13, <U8>0)
     str[0] = (result < 0) ? C_DASH : C_SPACE
     str[1] = d0 + C_ZERO
     str[2] = d1 + C_ZERO
@@ -179,11 +174,6 @@ def str(value: Fixed) String {
     str[10] = d8 + C_ZERO
     str[11] = d9 + C_ZERO
     str[12] = d10 + C_ZERO
-    str[13] = d11 + C_ZERO
-    str[14] = d12 + C_ZERO
-    str[15] = d13 + C_ZERO
-    str[16] = d14 + C_ZERO
-    str[17] = d15 + C_ZERO
     return <String>str
 }
 
@@ -565,8 +555,9 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         if tick == 0xffff {
             return win
         }
+        return pass
     } else {
-        set_error(`         [{col0.x()}, {col1.x()}, {col2.x()}, {col3.x()}],         [{pcol0.x()}, {pcol1.x()}, {pcol2.x()}, {pcol3.x()}]\nExpected [{col0.y()}, {col1.y()}, {col2.y()}, {col3.y()}], but got [{pcol0.y()}, {pcol1.y()}, {pcol2.y()}, {pcol3.y()}]\n         [{col0.z()}, {col1.z()}, {col2.z()}, {col3.z()}],         [{pcol0.z()}, {pcol1.z()}, {pcol2.z()}, {pcol3.z()}]\n         [{col0.w()}, {col1.w()}, {col2.w()}, {col3.w()}],         [{pcol0.w()}, {pcol1.w()}, {pcol2.w()}, {pcol3.w()}]`)
+        set_error(`Expected the matrix on the left, but received one on the right:\n[{pcol0.x()}, {pcol1.x()}, {pcol2.x()}, {pcol3.x()}]   [{col0.x()}, {col1.x()}, {col2.x()}, {col3.x()}]\n[{pcol0.y()}, {pcol1.y()}, {pcol2.y()}, {pcol3.y()}]   [{col0.y()}, {col1.y()}, {col2.y()}, {col3.y()}]\n[{pcol0.z()}, {pcol1.z()}, {pcol2.z()}, {pcol3.z()}]   [{col0.z()}, {col1.z()}, {col2.z()}, {col3.z()}]\n[{pcol0.w()}, {pcol1.w()}, {pcol2.w()}, {pcol3.w()}]   [{col0.w()}, {col1.w()}, {col2.w()}, {col3.w()}]`)
         return fail
     }
 }
