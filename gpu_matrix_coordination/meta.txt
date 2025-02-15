@@ -6,21 +6,30 @@ components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit:
 input_labels = [["Instruction"]]
 output_labels = ["P1x", "P1y", "P1z", "P2x", "P2y", "P2z", "P3x", "P3y", "P3z"]
 dialogue = [
-  (alien_centered, "Using only one pre-made matrix only allows us to render the scene from a single view, so we have to be able to change it."),
+  (alien_centered, "Using only one pre-made matrix allows us to render the scene from a single view only, so we have to be able to change it."),
   (info, "First of all, we need to create the infrastructure to test your circuit.
 Add a ROM and turn it into an assembler. Set the ROM's size to 32768 bytes.
-We will be reading the whole 4x4 matrix from it, so you need to change the width to 512 bits."),
+We will be reading whole 4x4 matrixes from it, so you need to change the width to 512 bits."),
   (info, "Next, you will need to decode a 32-bit instruction coming from the input, and depending on it perform the operations:
-[code][color=#ff9800]0[/color][color=#c2c2c2]XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX[/color][/code]
+[code][color=#ff9800]00[/color][color=#c2c2c2]XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX[/color][/code]
 Reserved
-[code][color=#ff9800]1[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
-Copy the MVP matrix from address [color=#0098ff]A[/color]
+[code][color=#ff9800]01[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Copy the Projection matrix from address [color=#0098ff]A[/color]
+[code][color=#ff9800]10[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Copy the View matrix from address [color=#0098ff]A[/color]
+[code][color=#ff9800]11[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Copy the Model matrix from address [color=#0098ff]A[/color]
 
-The MVP should be copied to a register so we don't have to access the memory for it, as we will be reading triangle data from memory, too.")
-  (info, "With the MVP matrix, we can map the vertices coming from memory from 3D to 2D.
+Each matrix should be copied to the respective registers so we don't have to access the memory for them, as we will be reading triangle data from memory, too.
+Hint: For better organization, make a 512-bit register custom component for storing the matrices.")
+  (info, "With the MVP matrixes stored, we can map the vertices coming from memory from 3D to 2D.
 1. Read the triangle data (XYZ vertex (96bits) and RGB color (24bits), three times).
 2. Extend the vertexes into 4D by appending W=1.
-3. Project the vertexes using the saved MVP matrix."),
+3. Multiply the vertex by the Model matrix.
+4. Multiply the vertex by the View matrix.
+5. Multiply the vertex by the Projection matrix.
+6. Project the vertex down to 3 dimensions by diving by W.
+7. Do this with all 3 points of the triangle."),
   (info, "[center]Return the points transformed by the MVP matrices.[/center]")
 ]
 default_isa_spec = `
@@ -35,11 +44,11 @@ vertex %x(immediate).%xd(immediate), %y(immediate).%yd(immediate), %z(immediate)
 %xdd = %xd / 625
 %ydd = %yd / 625
 %zdd = %zd / 625
-00000000 0000%xdd[3:0] %x[7:0] %x[15:8] 00000000 0000%ydd[3:0] %y[7:0] %y[15:8] 00000000 0000%zdd[3:0] %z[7:0] %z[15:8]
+%x[15:8] %x[7:0] %xdd[3:0]0000 00000000 %y[15:8] %y[7:0] %ydd[3:0]0000 00000000 %z[15:8] %z[7:0] %zdd[3:0]0000 00000000
 A 3D vertex.
 
 color %r(immediate), %g(immediate), %b(immediate)
-bbbbbbbb gggggggg rrrrrrrr
+rrrrrrrr gggggggg bbbbbbbb
 A color.
 
 mcol %a(immediate).%ad(immediate), %b(immediate).%bd(immediate), %c(immediate).%cd(immediate), %d(immediate).%dd(immediate)
@@ -47,11 +56,10 @@ mcol %a(immediate).%ad(immediate), %b(immediate).%bd(immediate), %c(immediate).%
 %bdd = %bd / 625
 %cdd = %cd / 625
 %ddd = %dd / 625
-00000000 0000%add[3:0] %a[7:0] %a[15:8] 00000000 0000%bdd[3:0] %b[7:0] %b[15:8] 00000000 0000%cdd[3:0] %c[7:0] %c[15:8] 00000000 0000%ddd[3:0] %d[7:0] %d[15:8]
+%a[15:8] %a[7:0] %add[3:0]0000 00000000 %b[15:8] %b[7:0] %bdd[3:0]0000 00000000 %c[15:8] %c[7:0] %cdd[3:0]0000 00000000 %d[15:8] %d[7:0] %ddd[3:0]0000 00000000
 A 4x4 matrix's column.
 `
 default_assembly = `
-; 1.Blue
 vertex 3.0, 2.0, 1.0
 color 255, 0, 0
 vertex 10.0, 2.0, 3.0

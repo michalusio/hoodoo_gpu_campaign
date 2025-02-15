@@ -39,6 +39,12 @@ def str(buffer: StringBuilder) String {
     return <String>arr
 }
 
+dot place_line($buffer: StringBuilder) {
+    if buffer.len() > 0 {
+        $buffer.place_char(C_NEWLINE)
+    }
+}
+
 dot place_string($buffer: StringBuilder, value: String) {
     let dbuffer = <[U16]>buffer
     let index = dbuffer[0]
@@ -446,28 +452,126 @@ def draw_matrix_column(colIndex: Int, col: Vector, id: String) {
     ui_set_text(`{id}3{colIndex}`, str(col.w()))
 }
 
-def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+const IO = [
+    0x4000002D, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE,
+    0x8000002D, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE,
+    0xC000002D, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE, Z_STATE
+]
 
-    switch tick
-        0 {
-            inputs[0] = 0x8000002D
-        }
-        default {
-            inputs[0] = 0
-        }
+def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
+    inputs[0] = IO[tick * 10]
 }
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
-    
-    if tick == 1 {
+    let e0 = IO[(tick * 10) + 1]
+    let p0 = outputs[0]
 
+    let e1 = IO[(tick * 10) + 2]
+    let p1 = outputs[1]
+
+    let e2 = IO[(tick * 10) + 3]
+    let p2 = outputs[2]
+
+    let e3 = IO[(tick * 10) + 4]
+    let p3 = outputs[3]
+
+    let e4 = IO[(tick * 10) + 5]
+    let p4 = outputs[4]
+
+    let e5 = IO[(tick * 10) + 6]
+    let p5 = outputs[5]
+
+    let e6 = IO[(tick * 10) + 7]
+    let p6 = outputs[6]
+
+    let e7 = IO[(tick * 10) + 8]
+    let p7 = outputs[7]
+
+    let e8 = IO[(tick * 10) + 9]
+    let p8 = outputs[8]
+
+    var err = string_builder()
+
+    if e0 != Z_STATE && e0 != p0 {
+        $err.place_line()
+        $err.place_string("First vertex X should have been ")
+        $err.place_fixed(<Fixed>e0)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p0)
     }
 
-    if 0 == 0 {
-        if tick == 0x7fff {
-            return win
-        }
-    } else {
+    if e1 != Z_STATE && e1 != p1 {
+        $err.place_line()
+        $err.place_string("First vertex Y should have been ")
+        $err.place_fixed(<Fixed>e1)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p1)
+    }
+
+    if e2 != Z_STATE && e2 != p2 {
+        $err.place_line()
+        $err.place_string("First vertex Z should have been ")
+        $err.place_fixed(<Fixed>e2)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p2)
+    }
+
+    if e3 != Z_STATE && e3 != p3 {
+        $err.place_line()
+        $err.place_string("Second vertex X should have been ")
+        $err.place_fixed(<Fixed>e3)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p3)
+    }
+
+    if e4 != Z_STATE && e4 != p4 {
+        $err.place_line()
+        $err.place_string("Second vertex Y should have been ")
+        $err.place_fixed(<Fixed>e4)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p4)
+    }
+
+    if e5 != Z_STATE && e5 != p5 {
+        $err.place_line()
+        $err.place_string("Second vertex Z should have been ")
+        $err.place_fixed(<Fixed>e5)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p5)
+    }
+
+    if e6 != Z_STATE && e6 != p6 {
+        $err.place_line()
+        $err.place_string("Third vertex X should have been ")
+        $err.place_fixed(<Fixed>e6)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p6)
+    }
+
+    if e7 != Z_STATE && e7 != p7 {
+        $err.place_line()
+        $err.place_string("Third vertex Y should have been ")
+        $err.place_fixed(<Fixed>e7)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p7)
+    }
+
+    if e8 != Z_STATE && e8 != p8 {
+        $err.place_line()
+        $err.place_string("Third vertex Z should have been ")
+        $err.place_fixed(<Fixed>e8)
+        $err.place_string(", but got ")
+        $err.place_fixed(<Fixed>p8)
+    }
+
+    if err.len() != 0 {
+        set_error(str(err))
         return fail
     }
+
+    if ((tick * 10) + 9) == IO.len() {
+        return win
+    }
+
+    return pass
 }
