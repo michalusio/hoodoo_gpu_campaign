@@ -1,14 +1,16 @@
 kind = combinational
 title = "Matrix Coordination"
-size = [-64, -64, 63, 63]
+size = [-128, -64, 127, 63]
 background = 5
-components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_punch_card: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_rom: -1, com_ram: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_ram_dual_load: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
+immutable_program = true
+immutable_spec = true
+components_available = [com_on: -1, com_off: -1, com_and_bit: -1, com_and_3_bit: -1, com_switch_bit: -1, com_switch_word: -1, com_add: -1, com_constant: -1, com_equal: -1, com_less_s: -1, com_less_u: -1, com_mux: -1, com_nand_word: -1, com_not_word: -1, com_lsl: -1, com_lsr: -1, com_asr: -1, com_rol: -1, com_ror: -1, com_xor_word: -1, com_xnor_word: -1, com_counter: -1, com_decoder_1: -1, com_decoder_2: -1, com_decoder_3: -1, com_div: -1, com_mod: -1, com_delay_line_bit: -1, com_splitter_bit_2: -1, com_splitter_bit_4: -1, com_splitter_bit_8: -1, com_maker_bit_2: -1, com_maker_bit_4: -1, com_maker_bit_8: -1, com_full_adder: -1, com_mul: -1, com_nand_bit: -1, com_nor_bit: -1, com_not_bit: -1, com_splitter_word_2: -1, com_splitter_word_4: -1, com_splitter_word_8: -1, com_maker_word_2: -1, com_maker_word_4: -1, com_maker_word_8: -1, com_static_indexer: -1, com_static_indexer_config: -1, com_concatenator_2: -1, com_concatenator_4: -1, com_concatenator_8: -1, com_or_bit: -1, com_or_3_bit: -1, com_or_word: -1, com_and_word: -1, com_nor_word: -1, com_register_word: -1, com_delay_line_word: -1, com_register_bit: -1, com_inc: -1, com_neg: -1, com_ram_fast: -1, com_load_port: -1, com_store_port: -1, com_ssd: -1, com_time: -1, com_console: -1, com_keyboard: -1, com_xnor_bit: -1, com_xor_bit: -1, com_cc_input: -1, com_cc_output: -1]
 input_labels = [["Instruction"]]
 output_labels = ["P1x", "P1y", "P1z", "P2x", "P2y", "P2z", "P3x", "P3y", "P3z"]
 dialogue = [
   (alien_centered, "Using only one pre-made matrix allows us to render the scene from a single view only, so we have to be able to change it."),
   (info, "First of all, we need to create the infrastructure to test your circuit.
-Add a ROM and turn it into an assembler. Set the ROM's size to 32768 bytes.
+Add a ROM and turn it into an assembler. Set the ROM's size to at least 512 bytes.
 We will be reading whole 4x4 matrixes from it, so you need to change the width to 512 bits."),
   (info, "Next, you will need to decode a 32-bit instruction coming from the input, and depending on it perform the operations:
 [code][color=#ff9800]00[/color][color=#c2c2c2]XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX[/color][/code]
@@ -21,15 +23,14 @@ Copy the View matrix from address [color=#0098ff]A[/color]
 Copy the Model matrix from address [color=#0098ff]A[/color]
 
 Each matrix should be copied to the respective registers so we don't have to access the memory for them, as we will be reading triangle data from memory, too.
-Hint: For better organization, make a 512-bit register custom component for storing the matrices.")
+Hint: Use the 512-bit register we made previously.")
   (info, "With the MVP matrixes stored, we can map the vertices coming from memory from 3D to 2D.
-1. Read the triangle data (XYZ vertex (96bits) and RGB color (24bits), three times).
-2. Extend the vertexes into 4D by appending W=1.
+1. Read the point data (XYZ vertex (96bits) and RGB color (24bits)).
+2. Extend the vertex into 4D by appending W=1.0 .
 3. Multiply the vertex by the Model matrix.
 4. Multiply the vertex by the View matrix.
-5. Multiply the vertex by the Projection matrix.
-6. Project the vertex down to 3 dimensions by diving by W.
-7. Do this with all 3 points of the triangle."),
+5. Project the vertex using the Projection matrix.
+Do this with all 3 points of the triangle."),
   (info, "[center]Return the points transformed by the MVP matrices.[/center]")
 ]
 default_isa_spec = `
@@ -41,10 +42,10 @@ name = "Hoodoo"
 [instructions]
 
 vertex %x(immediate).%xd(immediate), %y(immediate).%yd(immediate), %z(immediate).%zd(immediate)
-%xdd = %xd / 625
-%ydd = %yd / 625
-%zdd = %zd / 625
-%x[15:8] %x[7:0] %xdd[3:0]0000 00000000 %y[15:8] %y[7:0] %ydd[3:0]0000 00000000 %z[15:8] %z[7:0] %zdd[3:0]0000 00000000
+%xdd = %xd / 390625
+%ydd = %yd / 390625
+%zdd = %zd / 390625
+%z[15:8] %z[7:0] %zdd[7:0] 00000000 %y[15:8] %y[7:0] %ydd[7:0] 00000000 %x[15:8] %x[7:0] %xdd[7:0] 00000000
 A 3D vertex.
 
 color %r(immediate), %g(immediate), %b(immediate)
@@ -52,23 +53,43 @@ rrrrrrrr gggggggg bbbbbbbb
 A color.
 
 mcol %a(immediate).%ad(immediate), %b(immediate).%bd(immediate), %c(immediate).%cd(immediate), %d(immediate).%dd(immediate)
-%add = %ad / 625
-%bdd = %bd / 625
-%cdd = %cd / 625
-%ddd = %dd / 625
-%a[15:8] %a[7:0] %add[3:0]0000 00000000 %b[15:8] %b[7:0] %bdd[3:0]0000 00000000 %c[15:8] %c[7:0] %cdd[3:0]0000 00000000 %d[15:8] %d[7:0] %ddd[3:0]0000 00000000
+%add = %ad / 152587890625
+%bdd = %bd / 152587890625
+%cdd = %cd / 152587890625
+%ddd = %dd / 152587890625
+%a[15:8] %a[7:0] %add[15:8] %add[7:0] %b[15:8] %b[7:0] %bdd[15:8] %bdd[7:0] %c[15:8] %c[7:0] %cdd[15:8] %cdd[7:0] %d[15:8] %d[7:0] %ddd[15:8] %ddd[7:0]
 A 4x4 matrix's column.
 `
 default_assembly = `
-vertex 3.0, 2.0, 1.0
-color 255, 0, 0
-vertex 10.0, 2.0, 3.0
-color 0, 255, 0
-vertex 6.0, 5.0, 2.0
-color 0, 0, 255
+vertex 65534.00000000, 65532.00000000, 65525.00000000
+color    255,              0,              0
+vertex     3.00000000, 65532.00000000, 65523.00000000
+color      0,            255,              0
+vertex     3.00000000,     2.00000000, 65526.00000000
+color      0,              0,            255
 
-mcol 1.0, 0.0, 0.0, 0.0
-mcol 0.0, 1.0, 0.0, 0.0
-mcol 0.0, 0.0, 1.0, 0.0
-mcol 0.0, 0.0, 0.0, 1.0
+mcol       1.0000000000000000,     0.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     1.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     1.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     0.0000000000000000,     1.0000000000000000
+
+mcol       0.5000000000000000,     0.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     1.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     0.5000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     0.0000000000000000,     1.0000000000000000
+
+mcol       1.7320508075688800,     0.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     2.3094010767585000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000, 65535.0000000000000000, 65535.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000, 65534.0000000000000000,     0.0000000000000000
+
+mcol       0.8660254037844390,     0.0000000000000000, 65535.5000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     1.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.5000000000000000,     0.0000000000000000,     0.8660254037844390,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     0.0000000000000000,     1.0000000000000000
+
+mcol       1.0000000000000000,     0.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     1.0000000000000000,     0.0000000000000000,     0.0000000000000000
+mcol       0.0000000000000000,     0.0000000000000000,     1.0000000000000000,     0.0000000000000000
+mcol       3.0000000000000000,     2.0000000000000000,     1.0000000000000000,     1.0000000000000000
 `
