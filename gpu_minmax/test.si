@@ -80,7 +80,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
             return win
         }
     } else {
-        set_error(`Expected ({providedminx}, {providedmaxx}, {providedminy}, {providedmaxy}), but got ({minx}, {maxx}, {miny}, {maxy})`)
+        set_error(`Expected ({minx}, {maxx}, {miny}, {maxy}), but got ({providedminx}, {providedmaxx}, {providedminy}, {providedmaxy})`)
         return fail
     }
 }
