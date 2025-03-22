@@ -9,14 +9,14 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
         return
     }
     if tick == 36 {
-        inputs[0] = 0
-        inputs[1] = 5
-        inputs[2] = 0
-        inputs[3] = 5
+        inputs[0] = 5
+        inputs[1] = 11
+        inputs[2] = 3
+        inputs[3] = 9
         inputs[4] = 1
         return
     }
-    if tick < 36 + 49 {
+    if tick < 36 + 50 {
         inputs[0] = 5
         inputs[1] = 11
         inputs[2] = 3
@@ -24,11 +24,11 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
         inputs[4] = 0
         return
     }
-    if tick == 36 + 49 {
-        inputs[0] = 5
-        inputs[1] = 11
-        inputs[2] = 3
-        inputs[3] = 9
+    if tick == 36 + 50 {
+        inputs[0] = 15
+        inputs[1] = 15
+        inputs[2] = 10
+        inputs[3] = 10
         inputs[4] = 1
         return
     }
@@ -76,7 +76,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         return fail
     }
     
-    if tick == 36 + 49 + 1 {
+    if tick == 36 + 49 + 2 {
         return win
     }
 }

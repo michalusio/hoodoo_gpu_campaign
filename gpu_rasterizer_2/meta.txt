@@ -10,13 +10,13 @@ copy_solution_to_architecture = "Hoodoo"
 dialogue = [
   (alien_centered, "Of course drawing only one triangle on a screen is not that useful.
 That's why now we will add control signals that allow us to iterate over the triangles."),
-  (info, "Attach a 32bit register to the ROM component, and enlarge the ROM component to at least 131,072 bytes.
+  (info, "Attach a 32bit register to the program's RAM component, and enlarge the RAM to at least 131,072 bytes.
 When you are done drawing the triangle, increase the address so you read the next triangle, and reset the 2D counter.
 If you encounter a triangle with zero area, skip over it by going to the next one and resetting the 2D counter.")
-  (info, "Draw all the triangles described by the ROM data.
+  (info, "Draw all the triangles described by the RAM program.
   
 Hints:
-- Connect the ROM counter to the assembler so you can see which triangle is currently being drawn.
+- Connect the RAM program's counter to the assembler so you can see which triangle is currently being drawn.
 - Turn up the simulation speed to 20KHz, as rendering will take a moment.")
 ]
 default_isa_spec = `

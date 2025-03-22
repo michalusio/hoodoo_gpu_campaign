@@ -264,8 +264,8 @@ def dump() {
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
     if tick == 0 {
-        if get_ram_count() != 1 {
-            set_error("You should have one RAM for the pixel screen")
+        if get_ram_count() != 2 {
+            set_error("You should have one RAM for the pixel screen, and one for the program")
             return fail
         }
         if get_program_address() != 0 {
@@ -277,7 +277,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         var i = 0
         while i < 19200 {
             if (get_ram_value(i) != FIRST_RENDER[i]) {
-                set_error(`The first test render should be composed of three lines of triangles:\nThe first line should be Blue and Green\nThe second line should be Red and Yellow\nThe third line should be Magenta and Cyan.\nFound an error at ({i%160}, {i/160}) (was {get_ram_value(i)}, should be {SECOND_RENDER[i]})`)
+                set_error(`The first test render should be composed of three lines of triangles:\nThe first line should be Blue and Green\nThe second line should be Red and Yellow\nThe third line should be Magenta and Cyan.\nFound an error at ({i%160}, {i/160}) (was {get_ram_value(i)}, should be {FIRST_RENDER[i]})`)
                 return fail
             }
             i += 1

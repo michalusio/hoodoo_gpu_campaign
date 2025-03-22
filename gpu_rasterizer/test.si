@@ -127,8 +127,8 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
     if tick == 0 {
-        if get_ram_count() != 1 {
-            set_error("You should have one RAM for the pixel screen")
+        if get_ram_count() != 2 {
+            set_error("You should have one RAM for the pixel screen, and one for the program")
             return fail
         }
         if get_program_address() != 0 {
@@ -137,14 +137,14 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         }
     }
     if (get_ram_value(tick) != IMAGE[tick]) {
-        set_error(`The image is wrong at index {tick} (it should have value {IMAGE[tick]}). It should show a triangle with points (0, 0), (100, 100), (0, 100), showing Red, Green and Blue in the respective corners.`)
+        set_error(`The image is wrong at index {tick} (it should have value {IMAGE[tick]}).\nIt should show a triangle with points (0, 0), (100, 100), (0, 100), showing Red, Green and Blue in the respective corners.`)
         return fail
     }
     if tick == 19200 {
         var i = 0
         while i < tick {
             if (get_ram_value(i) != IMAGE[i]) {
-                set_error(`The image is wrong at index {i} (it should have value {IMAGE[i]}). It should show a triangle with points (0, 0), (100, 100), (0, 100), showing Red, Green and Blue in the respective corners.`)
+                set_error(`The image is wrong at index {i} (it should have value {IMAGE[i]}).\nIt should show a triangle with points (0, 0), (100, 100), (0, 100), showing Red, Green and Blue in the respective corners.`)
                 return fail
             }
             i += 1
