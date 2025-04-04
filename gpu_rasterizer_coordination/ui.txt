@@ -1,1 +1,1 @@
-[text id="description" text="Make the Hoodoo Rasterizer draw all triangles" size=24 y=90]
+[text id="description" text="Make the Hoodoo Rasterizer respond to commands" size=24 y=90]

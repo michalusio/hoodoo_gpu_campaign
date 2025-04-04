@@ -8,12 +8,17 @@ components_available = [com_halt: -1, com_pixel_screen: -1, com_on: -1, com_off:
 copy_solution_to_architecture = "Hoodoo"
 // copy_solution_to_level = ["gpu_rasterizer_2"]
 dialogue = [
-  (alien_centered, "Of course drawing only one triangle on a screen is not that useful.
-That's why now we will add control signals that allow us to iterate over the triangles."),
-  (info, "Attach a 32bit register to the ROM component, and enlarge the ROM component to at least 131,072 bytes.
-When you are done drawing the triangle, increase the address so you read the next triangle, and reset the 2D counter.
-If you encounter a triangle with zero area, skip over it by going to the next one and resetting the 2D counter.")
-  (info, "Draw all the triangles described by the ROM data.
+  (alien_centered, "Using only one set of triangles doesn't allow us to draw much.
+We also need to be able to tell the rasterizer when it should begin drawing the image."),
+  (info, "We need to modify the rasterizer to read instructions coming from the input located in the level, and perform the operations:
+[code][color=#ff9800]00000000000000000000000000000000[/color][/code]
+Do nothing
+[code][color=#ff9800]00000000[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Draw [color=#0098ff]A[/color] triangles
+[code][color=#ff9800]001[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+Set the start address to read triangles from, to [color=#0098ff]A[/color]")
+  (info, "Respond to inputs and perform the requested operations.
+Do not respond to any commands while the rasterizer is working.
   
 Hints:
 - Connect the ROM counter to the assembler so you can see which triangle is currently being drawn.

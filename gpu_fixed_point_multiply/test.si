@@ -228,71 +228,93 @@ def save($inputs: [Int], a: U32, b: U32, e: U32) {
 }
 
 def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
-
-    if tick == 0x10000 {
-        var a = <U32>0
-        var b = <U32>0
-        var expected = <U32>0
-        save($inputs, a, b, expected)    
-    } elif tick == 0x10001 {
-        var a = <U32>0x7fffffff
-        var b = <U32>0x00010000
-        var expected = <U32>0x7fffffff
-        save($inputs, a, b, expected)
-    } elif tick == 0x10002 {
-        var a = <U32>0x7fffffff
-        var b = <U32>0xFFFF0000
-        var expected = <U32>0x80000001
-        save($inputs, a, b, expected)
-    } elif tick == 0x10003 {
-        var a = <U32>0x499602D2
-        var b = <U32>0
-        var expected = <U32>0
-        save($inputs, a, b, expected)
-    } elif tick == 0x10004 {
-        var a = <U32>0
-        var b = <U32>0x499602D2
-        var expected = <U32>0
-        save($inputs, a, b, expected)
-    } else {
-        var x = tick
-        x ^= x << 7
-        x ^= x >> 9
-        x ^= x << 8
-        x ^= x << 15
-        x ^= x >> 17
-        x ^= x << 16
-        x ^= x << 7
-        x ^= x >> 9
-        x ^= x << 8
-        x ^= x << 53
-        x ^= x >> 55
-        x ^= x << 37
-        x ^= x >> 39
-        x ^= x << 45
-        x ^= x >> 47
-        x ^= x << 15
-        x ^= x >> 17
-        x ^= x << 16
-        x ^= x << 23
-        x ^= x >> 25
-        x ^= x << 7
-        x ^= x >> 9
-        x ^= x << 15
-        x ^= x >> 17
-
-        var a = <U32> (x & 0x01ffffff)
-        var b = <U32> ((x >> 32) & 0x03ffffff)
-
-        if x & 0x80000000 > 0 {
-            a = -a
+    switch tick
+        0x10000 {
+            var a = <U32>0
+            var b = <U32>0
+            var expected = <U32>0
+            save($inputs, a, b, expected)    
+            return
         }
-        if x & 0x8000000000000000 > 0 {
-            b = -b
+        0x10001 {
+            var a = <U32>0x7fffffff
+            var b = <U32>0x00010000
+            var expected = <U32>0x7fffffff
+            save($inputs, a, b, expected)
+            return
         }
-        var expected = get_expected(a, b)
-        save($inputs, a, b, expected)
+        0x10002 {
+            var a = <U32>0x7fffffff
+            var b = <U32>0xFFFF0000
+            var expected = <U32>0x80000001
+            save($inputs, a, b, expected)
+            return
+        }
+        0x10003 {
+            var a = <U32>0x499602D2
+            var b = <U32>0
+            var expected = <U32>0
+            save($inputs, a, b, expected)
+            return
+        }
+        0x10004 {
+            var a = <U32>0
+            var b = <U32>0x499602D2
+            var expected = <U32>0
+            save($inputs, a, b, expected)
+            return
+        }
+        0x10005 {
+            var a = <U32>27388723
+            var b = <U32>4291164165
+            var expected = <U32>2705567554
+            save($inputs, a, b, expected)
+            return
+        }
+        0x10006 {
+            var a = <U32>0x00000000
+            var b = <U32>0xFFFC0000
+            var expected = <U32>0x00000000
+            save($inputs, a, b, expected)
+            return
+        }
+    var x = tick
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 8
+    x ^= x << 53
+    x ^= x >> 55
+    x ^= x << 37
+    x ^= x >> 39
+    x ^= x << 45
+    x ^= x >> 47
+    x ^= x << 15
+    x ^= x >> 17
+    x ^= x << 16
+    x ^= x << 23
+    x ^= x >> 25
+    x ^= x << 7
+    x ^= x >> 9
+    x ^= x << 15
+    x ^= x >> 17
+
+    var a = <U32> (x & 0x01ffffff)
+    var b = <U32> ((x >> 32) & 0x03ffffff)
+
+    if x & 0x80000000 > 0 {
+        a = -a
     }
+    if x & 0x8000000000000000 > 0 {
+        b = -b
+    }
+    var expected = get_expected(a, b)
+    save($inputs, a, b, expected)
 }
 
 def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]) TestResult {
@@ -304,7 +326,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
     let provided = <U32> outputs[0]
 
     if provided == expected {
-        if tick == 0x10004 {
+        if tick == 0x10006 {
             return win
         }
         return pass
