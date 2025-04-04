@@ -1,6 +1,8 @@
 var input_tuples = [
-    [  3, 0x00000003],
-    [512, 0x00000000]
+    [  2, 0x20000015],// Set to Screen Clear
+    [  3, 0x00000002],// Draw 2 triangles
+  [19300, 0x20000000],// Set to All Red
+    [  3, 0x00000002],// Draw 2 triangles
 ]
 
 def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
