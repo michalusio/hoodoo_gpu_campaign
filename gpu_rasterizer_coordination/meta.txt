@@ -11,11 +11,14 @@ dialogue = [
   (alien_centered, "Using only one set of triangles doesn't allow us to draw much.
 We also need to be able to tell the rasterizer when it should begin drawing the image."),
   (info, "We need to modify the rasterizer to read instructions coming from the input located in the level, and perform the operations:
+
 [code][color=#ff9800]00000000000000000000000000000000[/color][/code]
 Do nothing
+
 [code][color=#ff9800]00000000[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
 Draw [color=#0098ff]A[/color] triangles
-[code][color=#ff9800]001[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
+
+[code][color=#ff9800]00100000[/color][color=#0098ff]AAAAAAAAAAAAAAAAAAAAAAAA[/color][/code]
 Set the start address to read triangles from, to [color=#0098ff]A[/color]")
   (info, "Respond to inputs and perform the requested operations.
 Do not respond to any commands while the rasterizer is working.
@@ -33,16 +36,31 @@ name = "Hoodoo"
 [instructions]
 
 point %a(immediate), %b(immediate)
-%a[7:0] %a[15:8] %b[7:0] %b[15:8]
+%b[15:8] %b[7:0] %a[15:8] %a[7:0]
 A 2D point.
 
 color %r(immediate), %g(immediate), %b(immediate)
-bbbbbbbb gggggggg rrrrrrrr
+rrrrrrrr gggggggg bbbbbbbb
 A color.
 
 `
 default_assembly = `
-; 1. All Red
+; 1. Screen Clear
+point 159, 119
+color 0, 0, 0
+point 0, 0
+color 0, 0, 0
+point 159, 0
+color 0, 0, 0
+
+point 0, 0
+color 0, 0, 0
+point 159, 119
+color 0, 0, 0
+point 0, 119
+color 0, 0, 0
+
+; 2. All Red
 point 159, 119
 color 255, 0, 0
 point 0, 0
@@ -50,11 +68,283 @@ color 255, 0, 0
 point 159, 0
 color 255, 0, 0
 
-; 2. Screen Clear
-point 159, 119
-color 0, 0, 0
 point 0, 0
-color 0, 0, 0
-point 119, 0
-color 0, 0, 0
+color 255, 0, 0
+point 159, 119
+color 255, 0, 0
+point 0, 119
+color 255, 0, 0
+
+; 3. Butterflies
+
+; Top-left
+
+point 5, 5
+color 0, 255, 255
+point 10, 10
+color 0, 255, 255
+point 5, 15
+color 0, 255, 0
+
+point 15, 5
+color 0, 255, 255
+point 15, 15
+color 0, 255, 0
+point 10, 10
+color 0, 255, 255
+
+; Top-right
+
+point 145, 5
+color 0, 255, 255
+point 150, 10
+color 0, 255, 255
+point 145, 15
+color 0, 255, 0
+
+point 155, 5
+color 0, 255, 255
+point 155, 15
+color 0, 255, 0
+point 150, 10
+color 0, 255, 255
+
+; Bottom-left
+
+point 5, 105
+color 0, 255, 255
+point 10, 110
+color 0, 255, 255
+point 5, 115
+color 0, 255, 0
+
+point 15, 105
+color 0, 255, 255
+point 15, 115
+color 0, 255, 0
+point 10, 110
+color 0, 255, 255
+
+; Bottom-right
+
+point 145, 105
+color 0, 255, 255
+point 150, 110
+color 0, 255, 255
+point 145, 115
+color 0, 255, 0
+
+point 155, 105
+color 0, 255, 255
+point 155, 115
+color 0, 255, 0
+point 150, 110
+color 0, 255, 255
+
+; 4. Text
+
+; Y
+
+point 20, 20
+color 255, 255, 255
+point 30, 20
+color 255, 255, 255
+point 40, 30
+color 255, 255, 255
+
+point 20, 20
+color 255, 255, 255
+point 40, 30
+color 255, 255, 255
+point 40, 40
+color 255, 255, 255
+
+point 60, 20
+color 255, 255, 255
+point 50, 20
+color 255, 255, 255
+point 40, 30
+color 255, 255, 255
+
+point 60, 20
+color 255, 255, 255
+point 40, 40
+color 255, 255, 255
+point 40, 30
+color 255, 255, 255
+
+point 37, 35
+color 255, 255, 255
+point 43, 35
+color 255, 255, 255
+point 37, 60
+color 255, 255, 255
+
+point 43, 35
+color 255, 255, 255
+point 43, 60
+color 255, 255, 255
+point 37, 60
+color 255, 255, 255
+
+; A
+
+point 60, 60
+color 255, 255, 255
+point 75, 25
+color 255, 255, 255
+point 65, 60
+color 255, 255, 255
+
+point 60, 60
+color 255, 255, 255
+point 72, 20
+color 255, 255, 255
+point 75, 25
+color 255, 255, 255
+
+point 85, 60
+color 255, 255, 255
+point 75, 25
+color 255, 255, 255
+point 90, 60
+color 255, 255, 255
+
+point 90, 60
+color 255, 255, 255
+point 75, 25
+color 255, 255, 255
+point 78, 20
+color 255, 255, 255
+
+point 72, 20
+color 255, 255, 255
+point 78, 20
+color 255, 255, 255
+point 75, 25
+color 255, 255, 255
+
+point 70, 40
+color 255, 255, 255
+point 80, 40
+color 255, 255, 255
+point 68, 45
+color 255, 255, 255
+
+point 80, 40
+color 255, 255, 255
+point 82, 45
+color 255, 255, 255
+point 68, 45
+color 255, 255, 255
+
+; Y
+
+point 90, 20
+color 255, 255, 255
+point 100, 20
+color 255, 255, 255
+point 110, 30
+color 255, 255, 255
+
+point 90, 20
+color 255, 255, 255
+point 110, 30
+color 255, 255, 255
+point 110, 40
+color 255, 255, 255
+
+point 130, 20
+color 255, 255, 255
+point 120, 20
+color 255, 255, 255
+point 110, 30
+color 255, 255, 255
+
+point 130, 20
+color 255, 255, 255
+point 110, 40
+color 255, 255, 255
+point 110, 30
+color 255, 255, 255
+
+point 107, 35
+color 255, 255, 255
+point 113, 35
+color 255, 255, 255
+point 107, 60
+color 255, 255, 255
+
+point 113, 35
+color 255, 255, 255
+point 113, 60
+color 255, 255, 255
+point 107, 60
+color 255, 255, 255
+
+; 5. Butterflies v2
+
+; Top-left
+
+point 5, 5
+color 255, 255, 0
+point 10, 10
+color 255, 255, 0
+point 5, 15
+color 255, 0, 255
+
+point 15, 5
+color 255, 255, 0
+point 15, 15
+color 255, 0, 255
+point 10, 10
+color 255, 255, 0
+
+; Top-right
+
+point 145, 5
+color 255, 255, 0
+point 150, 10
+color 255, 255, 0
+point 145, 15
+color 255, 0, 255
+
+point 155, 5
+color 255, 255, 0
+point 155, 15
+color 255, 0, 255
+point 150, 10
+color 255, 255, 0
+
+; Bottom-left
+
+point 5, 105
+color 255, 255, 0
+point 10, 110
+color 255, 255, 0
+point 5, 115
+color 255, 0, 255
+
+point 15, 105
+color 255, 255, 0
+point 15, 115
+color 255, 0, 255
+point 10, 110
+color 255, 255, 0
+
+; Bottom-right
+
+point 145, 105
+color 255, 255, 0
+point 150, 110
+color 255, 255, 0
+point 145, 115
+color 255, 0, 255
+
+point 155, 105
+color 255, 255, 0
+point 155, 115
+color 255, 0, 255
+point 150, 110
+color 255, 255, 0
 `
