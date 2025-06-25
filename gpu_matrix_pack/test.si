@@ -557,7 +557,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
         }
         return pass
     } else {
-        set_error(`Expected the matrix on the left, but received one on the right:\n[{pcol0.x()}, {pcol1.x()}, {pcol2.x()}, {pcol3.x()}]   [{col0.x()}, {col1.x()}, {col2.x()}, {col3.x()}]\n[{pcol0.y()}, {pcol1.y()}, {pcol2.y()}, {pcol3.y()}]   [{col0.y()}, {col1.y()}, {col2.y()}, {col3.y()}]\n[{pcol0.z()}, {pcol1.z()}, {pcol2.z()}, {pcol3.z()}]   [{col0.z()}, {col1.z()}, {col2.z()}, {col3.z()}]\n[{pcol0.w()}, {pcol1.w()}, {pcol2.w()}, {pcol3.w()}]   [{col0.w()}, {col1.w()}, {col2.w()}, {col3.w()}]`)
+        set_error(`Expected the matrix on the left, but received one on the right:\n[{col0.x()}, {col1.x()}, {col2.x()}, {col3.x()}]   [{pcol0.x()}, {pcol1.x()}, {pcol2.x()}, {pcol3.x()}]\n[{col0.y()}, {col1.y()}, {col2.y()}, {col3.y()}]   [{pcol0.y()}, {pcol1.y()}, {pcol2.y()}, {pcol3.y()}]\n[{col0.z()}, {col1.z()}, {col2.z()}, {col3.z()}]   [{pcol0.z()}, {pcol1.z()}, {pcol2.z()}, {pcol3.z()}]\n[{col0.w()}, {col1.w()}, {col2.w()}, {col3.w()}]   [{pcol0.w()}, {pcol1.w()}, {pcol2.w()}, {pcol3.w()}]`)
         return fail
     }
 }
