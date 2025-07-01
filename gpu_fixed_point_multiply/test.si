@@ -278,6 +278,20 @@ def get_input($scratch_space: [Int], tick: Int, $inputs: [Int]) {
             save($inputs, a, b, expected)
             return
         }
+        0x10007 {
+            var a = <U32>0x00000123
+            var b = <U32>0x80000000
+            var expected = <U32>0xFF6E8000
+            save($inputs, a, b, expected)
+            return
+        }
+        0x10008 {
+            var a = <U32>0x80000000
+            var b = <U32>0x00010000
+            var expected = <U32>0x80000000
+            save($inputs, a, b, expected)
+            return
+        }
     var x = tick
     x ^= x << 7
     x ^= x >> 9
@@ -326,7 +340,7 @@ def check_output($scratch_space: [Int], tick: Int, inputs: [Int], outputs: [Int]
     let provided = <U32> outputs[0]
 
     if provided == expected {
-        if tick == 0x10006 {
+        if tick == 0x10008 {
             return win
         }
         return pass
